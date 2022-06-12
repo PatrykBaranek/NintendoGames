@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\C#\\NintendoGames\\NintendoGames\\GamesList.csproj": {}
+    "D:\\C#\\GamesList\\GamesList\\GamesList.csproj": {}
   },
   "projects": {
-    "E:\\C#\\NintendoGames\\NintendoGames\\GamesList.csproj": {
+    "D:\\C#\\GamesList\\GamesList\\GamesList.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\C#\\NintendoGames\\NintendoGames\\GamesList.csproj",
+        "projectUniqueName": "D:\\C#\\GamesList\\GamesList\\GamesList.csproj",
         "projectName": "GamesList",
-        "projectPath": "E:\\C#\\NintendoGames\\NintendoGames\\GamesList.csproj",
+        "projectPath": "D:\\C#\\GamesList\\GamesList\\GamesList.csproj",
         "packagesPath": "C:\\Users\\cien2\\.nuget\\packages\\",
-        "outputPath": "E:\\C#\\NintendoGames\\NintendoGames\\obj\\",
+        "outputPath": "D:\\C#\\GamesList\\GamesList\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\cien2\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -71,7 +71,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -37,15 +37,15 @@ namespace NintendoGames.Controllers
                 doc = web.Load(url + $"&status=released&page={i + 1}&system=nintendo-switch");
 
                 var listOfGamesOnPage = doc.DocumentNode
-                .SelectNodes("//li[@data-type='game']").ToList();
+                .QuerySelectorAll("[data-type='game']").ToList();
 
                 for (int j = 0; j < listOfGamesOnPage.Count; j++)
                 {
                     gamesList.Add(new GameDto()
                     {
                         Name = listOfGamesOnPage[j].QuerySelector("span.title").InnerText,
-                        //ImageUrl = listOfGamesOnPage[j].QuerySelector("a.img img").Attributes["src"].Value,
-                        //Companies = listOfGamesOnPage[j].QuerySelector("p.description a").InnerText,
+                        //ImageUrl = listOfGamesOnPage[j].QuerySelector("div.cover a.img img").Attributes["src"].Value,
+                        Companies = listOfGamesOnPage[j].QuerySelector("p.description a").InnerText,
                     });
                 }
             }

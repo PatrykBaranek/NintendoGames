@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "u4ipHqUiQNPYC9s9dgC3pXmkdSx3/HEoXjbaTeOjGyw48XudOFiFS9OZpe3U7Bi51AXDearSIqS806ZcYOlubw==",
+  "dgSpecHash": "FU8JusuvD1YJ9/hAbYNFZmcuB6js9LaDP3VjSeHxk20hnum+36tsMOGMzsHg8EECCdJKG4UIyFVQt70CB0xPTg==",
   "success": true,
-  "projectFilePath": "E:\\C#\\NintendoGames\\NintendoGames\\GamesList.csproj",
+  "projectFilePath": "D:\\C#\\GamesList\\GamesList\\GamesList.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\cien2\\.nuget\\packages\\htmlagilitypack\\1.11.43\\htmlagilitypack.1.11.43.nupkg.sha512",
     "C:\\Users\\cien2\\.nuget\\packages\\htmlagilitypack.cssselectors.netcore\\1.2.1\\htmlagilitypack.cssselectors.netcore.1.2.1.nupkg.sha512",
