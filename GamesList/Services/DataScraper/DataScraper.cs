@@ -2,11 +2,6 @@
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
 using NintendoGames.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GamesList.Services.DataScraper
 {
@@ -40,7 +35,7 @@ namespace GamesList.Services.DataScraper
                     {
                         Name = listOfGamesOnPage[j].QuerySelector("span.title").InnerText,
                         ImageUrl = listOfGamesOnPage[j].SelectSingleNode("//div[@class = 'cover']/a[@class = 'img']/img").Attributes["src"].Value,
-                        Companies = GetAllCompanies(listOfGamesOnPage[j].QuerySelectorAll("p.description a").ToList()),
+                        Companies = GetAllCompaniesFromNintendoWebsite(listOfGamesOnPage[j].QuerySelectorAll("p.description a").ToList()),
                     }));
                 }
             }
@@ -53,12 +48,38 @@ namespace GamesList.Services.DataScraper
             throw new NotImplementedException();
         }
 
-        public List<RatingDto> GetRatings()
+        public List<RatingDto> GetRatings(List<GameDto> games)
         {
-            throw new NotImplementedException();
+            List<RatingDto> ratings = new List<RatingDto>();
+            List<string> gameUrls = new List<string>();
+
+            string url = "https://www.metacritic.com/game/switch/";
+            var web = new HtmlWeb();
+            var doc = web.Load(url);
+
+            foreach (var game in games)
+            {
+                gameUrls.Add(game.Name.Replace(' ', '-').ToLower());
+            }
+
+            foreach (var gameUrl in gameUrls)
+            {
+                doc = web.Load(url + gameUrl);
+
+                string gameRatingInHtml = doc.DocumentNode
+                    .SelectSingleNode("//span[@itemprop = 'ratingValue']").InnerText;
+
+                ratings.Add(new RatingDto()
+                {
+                    GameTitle = gameUrl.Replace("-", ""),
+                    MetacriticRating = gameRatingInHtml,
+                });
+            }
+
+            return ratings;
         }
 
-        private List<string> GetAllCompanies(List<HtmlNode> listOfNodes)
+        private List<string> GetAllCompaniesFromNintendoWebsite(List<HtmlNode> listOfNodes)
         {
             List<string> companies = new List<string>();
 

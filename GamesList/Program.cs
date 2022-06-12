@@ -9,12 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddDbContext<NintendoDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("NintendoConnectionString"));
 });
 
-builder.Services.AddSingleton<INintendoService, NintendoService>();
+builder.Services.AddScoped<INintendoService, NintendoService>();
 builder.Services.AddSingleton<IDataScraper, DataScraper>();
 builder.Services.AddSwaggerGen();
 
