@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\C#\\GamesList\\GamesList\\GamesList.csproj": {}
+    "E:\\C#\\GamesList\\GamesList\\GamesList.csproj": {}
   },
   "projects": {
-    "D:\\C#\\GamesList\\GamesList\\GamesList.csproj": {
+    "E:\\C#\\GamesList\\GamesList\\GamesList.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\C#\\GamesList\\GamesList\\GamesList.csproj",
+        "projectUniqueName": "E:\\C#\\GamesList\\GamesList\\GamesList.csproj",
         "projectName": "GamesList",
-        "projectPath": "D:\\C#\\GamesList\\GamesList\\GamesList.csproj",
+        "projectPath": "E:\\C#\\GamesList\\GamesList\\GamesList.csproj",
         "packagesPath": "C:\\Users\\cien2\\.nuget\\packages\\",
-        "outputPath": "D:\\C#\\GamesList\\GamesList\\obj\\",
+        "outputPath": "E:\\C#\\GamesList\\GamesList\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\cien2\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -48,6 +48,20 @@
               "target": "Package",
               "version": "[1.2.1, )"
             },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
@@ -71,7 +85,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }

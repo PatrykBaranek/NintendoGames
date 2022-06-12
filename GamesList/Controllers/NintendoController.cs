@@ -3,6 +3,8 @@ using HtmlAgilityPack;
 using NintendoGames.Models;
 using HtmlAgilityPack.CssSelectors.NetCore;
 using System.Text;
+using System.Diagnostics;
+using GamesList.Services;
 
 namespace NintendoGames.Controllers
 {
@@ -10,47 +12,27 @@ namespace NintendoGames.Controllers
     [Route("api/[controller]")]
     public class NintendoController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<List<GameDto>> GetAllGames()
+
+        private readonly INintendoService _nintendoService;
+
+        public NintendoController(INintendoService nintendoService)
         {
-            var gamesList = GetAllGamesFromWeb();
+            _nintendoService = nintendoService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<GameDto>>> GetAllGamesFromWeb()
+        {
+            var gamesList = await _nintendoService.GetAllGamesFromWeb();
 
             return Ok(gamesList);
         }
-
-        private static List<GameDto> GetAllGamesFromWeb()
-        {
-            var gamesList = new List<GameDto>();
-
-            var url = "https://www.nintendolife.com/games/browse?sort=popular";
-            var web = new HtmlWeb();
-            var doc = web.Load(url);
-
-
-            var pageCount = doc.DocumentNode
-                .QuerySelectorAll("ul.paginate li")
-                .Skip(1)
-                .ToList();
-
-            for (int i = 0; i < pageCount.Count; i++)
-            {
-                doc = web.Load(url + $"&status=released&page={i + 1}&system=nintendo-switch");
-
-                var listOfGamesOnPage = doc.DocumentNode
-                .QuerySelectorAll("[data-type='game']").ToList();
-
-                for (int j = 0; j < listOfGamesOnPage.Count; j++)
-                {
-                    gamesList.Add(new GameDto()
-                    {
-                        Name = listOfGamesOnPage[j].QuerySelector("span.title").InnerText,
-                        //ImageUrl = listOfGamesOnPage[j].QuerySelector("div.cover a.img img").Attributes["src"].Value,
-                        Companies = listOfGamesOnPage[j].QuerySelector("p.description a").InnerText,
-                    });
-                }
-            }
-
-            return gamesList;
-        }
     }
+
+
+
+
+
 }
+
+

@@ -1,11 +1,23 @@
+using GamesList.Entities;
+using GamesList.Services;
+using GamesList.Services.DataScraper;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddDbContext<NintendoDbContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("NintendoConnectionString"));
+});
+
+builder.Services.AddSingleton<INintendoService, NintendoService>();
+builder.Services.AddSingleton<IDataScraper, DataScraper>();
 builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 

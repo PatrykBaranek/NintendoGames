@@ -10,6 +10,6 @@ namespace NintendoGames.Models
     {
         public string Name { get; set; }
         public string ImageUrl { get; set; }
-        public string Companies { get; set; }
+        public List<string> Companies { get; set; }
     }
 }
