@@ -19,7 +19,7 @@ namespace GamesList.Services.DataScraper
                 .QuerySelector("li.last_page a.page_num").InnerText);
 
 
-            for (int i = 0; i < pageCount; i++)
+            for (int i = 0; i < 2; i++)
             {
                 doc = web.Load(url + $"&page={i}");
 
@@ -32,13 +32,7 @@ namespace GamesList.Services.DataScraper
                     {
                         GameTitle = listOfGamesOnPage[j].QuerySelector("a.title h3").InnerText,
                         ImageUrl = listOfGamesOnPage[j].SelectNodes("//td[@class = 'details']/div[@class = 'collapsed']/a/img")[j].Attributes["src"].Value,
-                        MoreInfoUrl = "https://www.metacritic.com" + listOfGamesOnPage[j].SelectNodes("//div[@class = 'collapsed']/a")[j].Attributes["href"].Value,
-                        Ratings = new RatingDto()
-                        {
-                            MetacriticCriticScore = listOfGamesOnPage[j].SelectNodes("//div[@class = 'metascore_w large game positive']")[j].InnerText,
-                            //MetacriticUserScore = listOfGamesOnPage[j].SelectNodes("//div[@class = 'metascore_w user large game positive']")[j].InnerText,
-                            //IsMustPlay = listOfGamesOnPage[j].QuerySelector(".mcmust") != null ? true : false,
-                        }
+                        MoreDetails = GetMoreDatails("https://www.metacritic.com" + listOfGamesOnPage[j].SelectNodes("//div[@class = 'collapsed']/a")[j].Attributes["href"].Value),
                     }));
 
                 }
@@ -51,6 +45,26 @@ namespace GamesList.Services.DataScraper
             throw new NotImplementedException();
         }
 
+        private MoreDetailsDto GetMoreDatails(string url)
+        {
+            var web = new HtmlWeb();
+            var doc = web.Load(url);
 
+            MoreDetailsDto result = new MoreDetailsDto()
+            {
+                Developers = doc.DocumentNode.QuerySelectorAll("li.developer span.data a").Select(d => d.InnerText.Split(',')).ToList(),
+                Genres = doc.DocumentNode.QuerySelectorAll(".product_genre .data").Select(ge => ge.InnerText).ToList(),
+                Platforms = doc.DocumentNode.QuerySelectorAll(".product_platforms .data .hover_none").Select(p => p.InnerText).ToList(),
+                Ratings = new RatingDto()
+                {
+                    MetacriticCriticScore = doc.DocumentNode.QuerySelector("[itemprop='ratingValue']") != null ?
+                        doc.DocumentNode.QuerySelector("[itemprop='ratingValue']").InnerText : string.Empty,
+                    MetacriticUserScore = doc.DocumentNode.QuerySelector(".metascore_w.user.large.game.positive").InnerText,
+                    IsMustPlay = doc.DocumentNode.QuerySelector(".must_play.product") != null ? true : false
+                }
+            };
+
+            return result;
+        }
     }
 }
