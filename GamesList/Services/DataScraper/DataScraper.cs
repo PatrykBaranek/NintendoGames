@@ -24,7 +24,7 @@ namespace GamesList.Services.DataScraper
                 doc = web.Load(url + $"&page={i}");
 
                 var listOfGamesOnPage = doc.DocumentNode
-                .QuerySelectorAll(".clamp-list tr.expand_collapse").ToList();
+                .QuerySelectorAll("table.clamp-list").ToList();
 
                 for (int j = 0; j < listOfGamesOnPage.Count; j++)
                 {
@@ -32,6 +32,7 @@ namespace GamesList.Services.DataScraper
                     {
                         GameTitle = listOfGamesOnPage[j].QuerySelector("a.title h3").InnerText,
                         ImageUrl = listOfGamesOnPage[j].SelectSingleNode("//div[@class = 'collapsed']/a/img").Attributes["src"].Value,
+                        MoreInfoUrl = "https://www.metacritic.com" + listOfGamesOnPage[j].SelectSingleNode("//div[@class = 'collapsed']/a").Attributes["href"].Value,
                         Ratings = new RatingDto()
                         {
                             //MetacriticCriticScore = listOfGamesOnPage[j].QuerySelector(".metascore_w.large.game.positive").InnerText,

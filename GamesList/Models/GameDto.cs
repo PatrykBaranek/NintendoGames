@@ -11,6 +11,7 @@ namespace NintendoGames.Models
     {
         public string GameTitle { get; set; }
         public string ImageUrl { get; set; }
+        public string MoreInfoUrl { get; set; }
         public RatingDto Ratings { get; set; }
     }
 }
