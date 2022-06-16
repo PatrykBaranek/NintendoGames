@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GamesList.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,8 @@ namespace NintendoGames.Models
 {
     public class GameDto
     {
-        public string Name { get; set; }
+        public string GameTitle { get; set; }
         public string ImageUrl { get; set; }
-        public List<string> Companies { get; set; }
+        public RatingDto Ratings { get; set; }
     }
 }

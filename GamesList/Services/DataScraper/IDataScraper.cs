@@ -6,5 +6,6 @@ namespace GamesList.Services.DataScraper
     public interface IDataScraper
     {
         Task<List<GameDto>> GetNintendoGames();
+        List<PriceDto> GetPrices();
     }
 }

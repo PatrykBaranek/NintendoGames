@@ -1,7 +1,5 @@
 ﻿using GamesList.Entities;
 using GamesList.Services.DataScraper;
-using HtmlAgilityPack;
-using HtmlAgilityPack.CssSelectors.NetCore;
 using NintendoGames.Models;
 
 namespace GamesList.Services

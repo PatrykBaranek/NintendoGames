@@ -9,7 +9,7 @@ namespace GamesList.Entities
 {
     public class PricesEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Price { get; set; }
 
 
