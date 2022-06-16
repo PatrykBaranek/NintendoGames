@@ -2110,11 +2110,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\C#\\GamesList\\GamesList\\GamesList.csproj",
+      "projectUniqueName": "E:\\C#\\GamesList\\GamesList\\GamesList.csproj",
       "projectName": "GamesList",
-      "projectPath": "D:\\C#\\GamesList\\GamesList\\GamesList.csproj",
+      "projectPath": "E:\\C#\\GamesList\\GamesList\\GamesList.csproj",
       "packagesPath": "C:\\Users\\cien2\\.nuget\\packages\\",
-      "outputPath": "D:\\C#\\GamesList\\GamesList\\obj\\",
+      "outputPath": "E:\\C#\\GamesList\\GamesList\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\cien2\\AppData\\Roaming\\NuGet\\NuGet.Config",

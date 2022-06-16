@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "1AZqgspksY2aKxizuq4dcctNMcxH5+ItN4kDp9lcqS4kpdVjv3d77op47Ed1s8Mnih1J0g3i68s38P8VTYx4bA==",
+  "dgSpecHash": "ojfppqJz1oSjV1WTgTG6sn/6lrFYgk00gT++lBb1itbVZZEQMAvY7gynwIJ/Gkl2tuXyhjENQcf8Wmahg6/GGA==",
   "success": true,
-  "projectFilePath": "D:\\C#\\GamesList\\GamesList\\GamesList.csproj",
+  "projectFilePath": "E:\\C#\\GamesList\\GamesList\\GamesList.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\cien2\\.nuget\\packages\\htmlagilitypack\\1.11.43\\htmlagilitypack.1.11.43.nupkg.sha512",
     "C:\\Users\\cien2\\.nuget\\packages\\htmlagilitypack.cssselectors.netcore\\1.2.1\\htmlagilitypack.cssselectors.netcore.1.2.1.nupkg.sha512",
