@@ -11,84 +11,55 @@ namespace GamesList.Services.DataScraper
         {
             var gamesList = new List<GameDto>();
 
-            var url = "https://www.nintendolife.com/games/browse?sort=popular";
+            var url = "https://www.metacritic.com/browse/games/release-date/available/switch/metascore?view=condensed";
             var web = new HtmlWeb();
             var doc = web.Load(url);
 
-
-            var pageCount = doc.DocumentNode
-                .QuerySelectorAll("ul.paginate li")
-                .Skip(1)
-                .ToList();
+            var pageCount = int.Parse(doc.DocumentNode
+                .QuerySelector("li.last_page a.page_num").InnerText);
 
 
-            for (int i = 0; i < pageCount.Count; i++)
+            for (int i = 0; i < 1; i++)
             {
-                doc = web.Load(url + $"&status=released&page={i + 1}&system=nintendo-switch");
+                doc = web.Load(url + $"&page={i}");
 
-                var listOfGamesOnPage = doc.DocumentNode
-                .QuerySelectorAll("[data-type='game']").ToList();
+                List<HtmlNode> listOfGamesOnPage = doc.DocumentNode
+                .QuerySelectorAll("table.clamp-list tr.expand_collapse").ToList();
 
                 for (int j = 0; j < listOfGamesOnPage.Count; j++)
                 {
                     await Task.Run(() => gamesList.Add(new GameDto()
                     {
-                        Name = listOfGamesOnPage[j].QuerySelector("span.title").InnerText,
-                        ImageUrl = listOfGamesOnPage[j].SelectSingleNode("//div[@class = 'cover']/a[@class = 'img']/img").Attributes["src"].Value,
-                        Companies = GetAllCompaniesFromNintendoWebsite(listOfGamesOnPage[j].QuerySelectorAll("p.description a").ToList()),
+                        GameTitle = listOfGamesOnPage[j].QuerySelector("a.title h3").InnerText,
+                        ImageUrl = listOfGamesOnPage[j].SelectNodes("//td[@class = 'details']/div[@class = 'collapsed']/a/img")[j].Attributes["src"].Value,
+                        ReleaseDate = listOfGamesOnPage[j].SelectNodes("//td[@class = 'details']/span")[j].InnerText,
+                        MoreDetails = GetMoreDatails("https://www.metacritic.com" + listOfGamesOnPage[j].SelectNodes("//div[@class = 'collapsed']/a")[j].Attributes["href"].Value),
                     }));
+
                 }
             }
-
             return gamesList;
         }
 
-        public List<PriceDto> GetPrices()
+        private MoreDetailsDto GetMoreDatails(string url)
         {
-            throw new NotImplementedException();
-        }
-
-        public List<RatingDto> GetRatings(List<GameDto> games)
-        {
-            List<RatingDto> ratings = new List<RatingDto>();
-            List<string> gameUrls = new List<string>();
-
-            string url = "https://www.metacritic.com/game/switch/";
             var web = new HtmlWeb();
             var doc = web.Load(url);
 
-            foreach (var game in games)
+            MoreDetailsDto result = new MoreDetailsDto()
             {
-                gameUrls.Add(game.Name.Replace(' ', '-').ToLower());
-            }
-
-            foreach (var gameUrl in gameUrls)
-            {
-                doc = web.Load(url + gameUrl);
-
-                string gameRatingInHtml = doc.DocumentNode
-                    .SelectSingleNode("//span[@itemprop = 'ratingValue']").InnerText;
-
-                ratings.Add(new RatingDto()
+                Developers = doc.DocumentNode.QuerySelectorAll("li.developer span.data a").Select(d => d.InnerText.Split(',')).ToList(),
+                Genres = doc.DocumentNode.QuerySelectorAll(".product_genre .data").Select(ge => ge.InnerText).ToList(),
+                Platforms = doc.DocumentNode.QuerySelectorAll(".product_platforms .data .hover_none").Select(p => p.InnerText).Append("Switch").ToList(),
+                Ratings = new RatingDto()
                 {
-                    GameTitle = gameUrl.Replace("-", ""),
-                    MetacriticRating = gameRatingInHtml,
-                });
-            }
+                    MetacriticCriticScore = doc.DocumentNode.QuerySelector("[itemprop='ratingValue']") != null ?
+                        doc.DocumentNode.QuerySelector("[itemprop='ratingValue']").InnerText : string.Empty,
+                    IsMustPlay = doc.DocumentNode.QuerySelector(".must_play.product") != null ? true : false
+                }
+            };
 
-            return ratings;
-        }
-
-        private List<string> GetAllCompaniesFromNintendoWebsite(List<HtmlNode> listOfNodes)
-        {
-            List<string> companies = new List<string>();
-
-            foreach (var item in listOfNodes)
-            {
-                companies.Add(item.InnerText);
-            }
-
-            return companies;
+            return result;
         }
     }
 }
