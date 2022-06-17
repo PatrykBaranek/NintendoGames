@@ -3,7 +3,6 @@
     public class RatingDto
     {
         public string MetacriticCriticScore { get; set; }
-        public string MetacriticUserScore { get; set; }
         public bool IsMustPlay { get; set; }
     }
 }

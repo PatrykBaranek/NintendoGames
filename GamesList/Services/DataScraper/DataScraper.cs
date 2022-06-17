@@ -19,7 +19,7 @@ namespace GamesList.Services.DataScraper
                 .QuerySelector("li.last_page a.page_num").InnerText);
 
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 1; i++)
             {
                 doc = web.Load(url + $"&page={i}");
 
@@ -32,17 +32,13 @@ namespace GamesList.Services.DataScraper
                     {
                         GameTitle = listOfGamesOnPage[j].QuerySelector("a.title h3").InnerText,
                         ImageUrl = listOfGamesOnPage[j].SelectNodes("//td[@class = 'details']/div[@class = 'collapsed']/a/img")[j].Attributes["src"].Value,
+                        ReleaseDate = listOfGamesOnPage[j].SelectNodes("//td[@class = 'details']/span")[j].InnerText,
                         MoreDetails = GetMoreDatails("https://www.metacritic.com" + listOfGamesOnPage[j].SelectNodes("//div[@class = 'collapsed']/a")[j].Attributes["href"].Value),
                     }));
 
                 }
             }
             return gamesList;
-        }
-
-        public List<PriceDto> GetPrices()
-        {
-            throw new NotImplementedException();
         }
 
         private MoreDetailsDto GetMoreDatails(string url)
@@ -54,12 +50,11 @@ namespace GamesList.Services.DataScraper
             {
                 Developers = doc.DocumentNode.QuerySelectorAll("li.developer span.data a").Select(d => d.InnerText.Split(',')).ToList(),
                 Genres = doc.DocumentNode.QuerySelectorAll(".product_genre .data").Select(ge => ge.InnerText).ToList(),
-                Platforms = doc.DocumentNode.QuerySelectorAll(".product_platforms .data .hover_none").Select(p => p.InnerText).ToList(),
+                Platforms = doc.DocumentNode.QuerySelectorAll(".product_platforms .data .hover_none").Select(p => p.InnerText).Append("Switch").ToList(),
                 Ratings = new RatingDto()
                 {
                     MetacriticCriticScore = doc.DocumentNode.QuerySelector("[itemprop='ratingValue']") != null ?
                         doc.DocumentNode.QuerySelector("[itemprop='ratingValue']").InnerText : string.Empty,
-                    MetacriticUserScore = doc.DocumentNode.QuerySelector(".metascore_w.user.large.game.positive").InnerText,
                     IsMustPlay = doc.DocumentNode.QuerySelector(".must_play.product") != null ? true : false
                 }
             };

@@ -8,7 +8,7 @@ namespace GamesList.Services
     {
         private readonly IDataScraper _dataScraper;
         private readonly NintendoDbContext _dbContext;
-        private List<GameDto> _games;
+        private static List<GameDto> _games;
 
 
         public NintendoService(NintendoDbContext dbContext, IDataScraper dataScraper)
