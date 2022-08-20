@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using HtmlAgilityPack;
 using NintendoGames.Models;
-using HtmlAgilityPack.CssSelectors.NetCore;
-using System.Text;
-using System.Diagnostics;
-using GamesList.Services;
+using NintendoGames.Services;
 
 namespace NintendoGames.Controllers
 {

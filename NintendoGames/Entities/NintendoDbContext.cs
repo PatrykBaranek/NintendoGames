@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NintendoGames.Entities;
 
-namespace GamesList.Entities
+namespace NintendoGames.Entities
 {
     public class NintendoDbContext : DbContext
     {
@@ -10,21 +9,21 @@ namespace GamesList.Entities
 
         }
 
-        public DbSet<GamesEntity> Games { get; set; }
-        public DbSet<RatingsEntity> Ratings { get; set; }
+        public DbSet<Games> Games { get; set; }
+        public DbSet<Ratings> Ratings { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GamesEntity>()
+            modelBuilder.Entity<Games>()
                 .Property(g => g.Title)
                 .HasMaxLength(50)
                 .IsRequired();
 
-            modelBuilder.Entity<GamesEntity>()
+            modelBuilder.Entity<Games>()
                 .HasOne(g => g.Ratings)
                 .WithOne(r => r.Games)
-                .HasForeignKey<RatingsEntity>(r => r.GameId);
+                .HasForeignKey<Ratings>(r => r.GameId);
         }
     }
 }

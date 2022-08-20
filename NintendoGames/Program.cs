@@ -1,7 +1,7 @@
-using GamesList.Entities;
-using GamesList.Services;
 using GamesList.Services.DataScraper;
 using Microsoft.EntityFrameworkCore;
+using NintendoGames.Entities;
+using NintendoGames.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

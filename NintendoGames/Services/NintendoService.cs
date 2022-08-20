@@ -1,8 +1,8 @@
-﻿using GamesList.Entities;
-using GamesList.Services.DataScraper;
+﻿using NintendoGames.Entities;
 using NintendoGames.Models;
+using NintendoGames.Services.DataScraper;
 
-namespace GamesList.Services
+namespace NintendoGames.Services
 {
     public class NintendoService : INintendoService
     {

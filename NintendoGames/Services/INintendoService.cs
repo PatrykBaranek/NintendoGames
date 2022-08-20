@@ -1,7 +1,6 @@
-﻿using HtmlAgilityPack;
-using NintendoGames.Models;
+﻿using NintendoGames.Models;
 
-namespace GamesList.Services
+namespace NintendoGames.Services
 {
     public interface INintendoService
     {

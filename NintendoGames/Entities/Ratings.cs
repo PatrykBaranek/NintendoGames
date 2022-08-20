@@ -1,13 +1,11 @@
-﻿using NintendoGames.Entities;
-
-namespace GamesList.Entities
+﻿namespace NintendoGames.Entities
 {
-    public class RatingsEntity
+    public class Ratings
     {
         public Guid Id { get; set; }
         public int MetacriticCriticRating { get; set; }
 
         public Guid GameId { get; set; }
-        public GamesEntity Games { get; set; }
+        public Games Games { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
 using NintendoGames.Models;
 
-namespace GamesList.Services.DataScraper
+namespace NintendoGames.Services.DataScraper
 {
     public class DataScraper : IDataScraper
     {

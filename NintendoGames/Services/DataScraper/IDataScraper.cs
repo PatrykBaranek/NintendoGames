@@ -1,7 +1,6 @@
-﻿using GamesList.Models;
-using NintendoGames.Models;
+﻿using NintendoGames.Models;
 
-namespace GamesList.Services.DataScraper
+namespace NintendoGames.Services.DataScraper
 {
     public interface IDataScraper
     {
