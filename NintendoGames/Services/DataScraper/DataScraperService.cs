@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
-using NintendoGames.Models;
+using NintendoGames.Entities;
+using NintendoGames.Models.DataScraper;
 
 namespace NintendoGames.Services.DataScraper
 {
@@ -9,51 +10,84 @@ namespace NintendoGames.Services.DataScraper
         private const string URL =
             "https://www.metacritic.com/browse/games/release-date/available/switch/metascore?view=condensed";
 
+
+        private readonly NintendoDbContext _dbContext;
+        private readonly HttpClient _client;
+        private readonly List<GameDto> _gamesList;
+
+        public DataScraperService(NintendoDbContext dbContext)
+        {
+            _dbContext = dbContext;
+            _client = new HttpClient();
+            _gamesList = new List<GameDto>();
+        }
+
+        public List<GameDto> GetList()
+        {
+            if (_gamesList.Count == 0)
+            {
+                return null;
+            }
+
+            return _gamesList;
+        }
+
+
         public async Task<List<GameDto>> GetNintendoGames()
         {
-            var gamesList = new List<GameDto>();
-
-            var web = new HtmlWeb();
-            var doc = await web.LoadFromWebAsync(URL);
-
-            var pageCount = int.Parse(doc.DocumentNode
-                .QuerySelector("li.last_page a.page_num").InnerText);
-
-
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i <= 2; i++)
             {
-                doc = web.Load(URL + $"&page={i}");
+                var doc = await GetHtmlDocument(URL + $"&page={i}");
 
                 var listOfGamesOnPage = doc.DocumentNode
                 .QuerySelectorAll("table.clamp-list tr.expand_collapse").ToList();
 
                 for (int j = 0; j < listOfGamesOnPage.Count; j++)
                 {
-                    await Task.Run(() => gamesList.Add(new GameDto
-                    {
-                        Id = listOfGamesOnPage[j].SelectNodes("//span[@class = 'title numbered']")[j].InnerText,
-                        
-                        GameTitle = listOfGamesOnPage[j].QuerySelector("a.title h3").InnerText,
-                        
-                        ImageUrl = listOfGamesOnPage[j]
+                    var game = await GetGameDetails(
+                        listOfGamesOnPage[j].SelectNodes("//span[@class = 'title numbered']")[j].InnerText,
+
+                        listOfGamesOnPage[j].QuerySelector("a.title h3").InnerText,
+
+                        listOfGamesOnPage[j]
                             .SelectNodes("//td[@class = 'details']/div[@class = 'collapsed']/a/img")[j]
                             .Attributes["src"].Value,
 
-                        ReleaseDate = listOfGamesOnPage[j].SelectNodes("//td[@class = 'details']/span")[j].InnerText,
+                        listOfGamesOnPage[j].SelectNodes("//td[@class = 'details']/span")[j].InnerText,
 
-                        MoreDetails = GetMoreDatails("https://www.metacritic.com" +
-                                                     listOfGamesOnPage[j].SelectNodes("//div[@class = 'collapsed']/a")[
-                                                         j].Attributes["href"].Value),
-                    }));
+                        "https://www.metacritic.com" +
+                                                   listOfGamesOnPage[j].SelectNodes("//div[@class = 'collapsed']/a")[
+                                                        j].Attributes["href"].Value
+                    );
+
+                    _gamesList.Add(game);
                 }
             }
-            return gamesList;
+
+            return _gamesList;
         }
 
-        private MoreDetailsDto GetMoreDatails(string url)
+        private async Task<GameDto> GetGameDetails(string id, string gameTitle, string imgUrl, string releaseDate, string moreDetailsUrl)
         {
-            var web = new HtmlWeb();
-            var doc = web.Load(url);
+            var moreDetails = await GetMoreDetails(moreDetailsUrl);
+
+            var gameDto = new GameDto
+            {
+                Id = id,
+                GameTitle = gameTitle,
+                ImageUrl = imgUrl,
+                ReleaseDate = releaseDate,
+                MoreDetails = moreDetails,
+            };
+
+            return gameDto;
+        }
+
+
+        private async Task<MoreDetailsDto> GetMoreDetails(string url)
+        {
+
+            var doc = await GetHtmlDocument(url);
 
             var result = new MoreDetailsDto
             {
@@ -70,6 +104,16 @@ namespace NintendoGames.Services.DataScraper
             };
 
             return result;
+        }
+
+        private async Task<HtmlDocument> GetHtmlDocument(string url)
+        {
+            var html = await _client.GetStringAsync(url);
+
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            return doc;
         }
     }
 }
