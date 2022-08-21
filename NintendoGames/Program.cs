@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using NintendoGames.Entities;
+using NintendoGames.Middleware;
 using NintendoGames.Services.DataScraper;
 using NintendoGames.Services.Games;
 
@@ -18,8 +19,12 @@ builder.Services.AddDbContext<NintendoDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("NintendoConnectionString"));
 });
 
+// Middleware
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
+
 builder.Services.AddScoped<IGamesService, GamesService>();
-builder.Services.AddSingleton<IDataScraperService, DataScraperService>();
+builder.Services.AddScoped<IDataScraperService, DataScraperService>();
+
 builder.Services.AddSwaggerGen();
 
 
@@ -31,6 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseAuthorization();
 
