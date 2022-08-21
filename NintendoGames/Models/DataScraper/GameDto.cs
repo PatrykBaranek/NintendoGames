@@ -1,4 +1,4 @@
-﻿namespace NintendoGames.Models
+﻿namespace NintendoGames.Models.DataScraper
 {
     public class GameDto
     {
