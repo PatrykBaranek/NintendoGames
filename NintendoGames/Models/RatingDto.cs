@@ -1,8 +1,7 @@
-﻿namespace GamesList.Models
+﻿namespace NintendoGames.Models;
+public class RatingDto
 {
-    public class RatingDto
-    {
-        public string MetacriticCriticScore { get; set; }
-        public bool IsMustPlay { get; set; }
-    }
+    public string CriticRating { get; set; }
+    public string UserScore { get; set; }
+    public bool IsMustPlay { get; set; }
 }

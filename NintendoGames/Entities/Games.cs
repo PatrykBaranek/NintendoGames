@@ -7,6 +7,9 @@
         public DateTime ReleaseDate { get; set; }
         public string ImageUrl { get; set; }
 
+        public Guid DeveloperId { get; set; }
+        public Developer Developer { get; set; }
+
         public Guid RatingId { get; set; }
         public Ratings Ratings { get; set; }
     }

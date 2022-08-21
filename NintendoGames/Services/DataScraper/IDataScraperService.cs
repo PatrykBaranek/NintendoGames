@@ -2,7 +2,7 @@
 
 namespace NintendoGames.Services.DataScraper
 {
-    public interface IDataScraper
+    public interface IDataScraperService
     {
         Task<List<GameDto>> GetNintendoGames();
     }

@@ -1,7 +1,8 @@
-using GamesList.Services.DataScraper;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using NintendoGames.Entities;
-using NintendoGames.Services;
+using NintendoGames.Services.DataScraper;
+using NintendoGames.Services.Games;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,13 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
 builder.Services.AddDbContext<NintendoDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("NintendoConnectionString"));
 });
 
-builder.Services.AddScoped<INintendoService, NintendoService>();
-builder.Services.AddSingleton<IDataScraper, DataScraper>();
+builder.Services.AddScoped<IGamesService, GamesService>();
+builder.Services.AddSingleton<IDataScraperService, DataScraperService>();
 builder.Services.AddSwaggerGen();
 
 

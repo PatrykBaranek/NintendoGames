@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NintendoGames", "GamesList\NintendoGames.csproj", "{E67EA266-35ED-4375-ABF1-1A45B2140495}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NintendoGames", "NintendoGames\NintendoGames.csproj", "{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +15,18 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Debug|x64.Build.0 = Debug|Any CPU
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Debug|x86.Build.0 = Debug|Any CPU
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Release|x64.ActiveCfg = Release|Any CPU
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Release|x64.Build.0 = Release|Any CPU
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Release|x86.ActiveCfg = Release|Any CPU
-		{E67EA266-35ED-4375-ABF1-1A45B2140495}.Release|x86.Build.0 = Release|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Debug|x64.Build.0 = Debug|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Debug|x86.Build.0 = Debug|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Release|x64.ActiveCfg = Release|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Release|x64.Build.0 = Release|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Release|x86.ActiveCfg = Release|Any CPU
+		{CFA232FC-007B-44D0-8F4B-6E3F3CC54719}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
