@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NintendoGames.Models;
+using NintendoGames.Models.DataScraper;
 using NintendoGames.Services.DataScraper;
 
 namespace NintendoGames.Controllers
@@ -24,7 +24,21 @@ namespace NintendoGames.Controllers
             return Ok(gamesFromWeb);
         }
 
+        [HttpGet("list")]
+        public ActionResult<List<GameDto>> GetList()
+        {
+            var list = _dataScraperService.GetList();
+
+            if (list == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(list);
+        }
         
+
+
     }
 
 
