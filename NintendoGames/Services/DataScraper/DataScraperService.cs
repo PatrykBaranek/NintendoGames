@@ -1,43 +1,65 @@
-﻿using HtmlAgilityPack;
+﻿using AutoMapper;
+using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
 using NintendoGames.Entities;
+using NintendoGames.Exceptions;
 using NintendoGames.Models.DataScraper;
 
 namespace NintendoGames.Services.DataScraper
 {
     public class DataScraperService : IDataScraperService
     {
-        private const string URL =
+        private const string _URL =
             "https://www.metacritic.com/browse/games/release-date/available/switch/metascore?view=condensed";
-
 
         private readonly NintendoDbContext _dbContext;
         private readonly HttpClient _client;
-        private readonly List<GameDto> _gamesList;
+        private readonly IMapper _mapper;
 
-        public DataScraperService(NintendoDbContext dbContext)
+        private static readonly List<GameDto> GamesList = new();
+
+        public DataScraperService(NintendoDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
             _client = new HttpClient();
-            _gamesList = new List<GameDto>();
         }
 
         public List<GameDto> GetList()
         {
-            if (_gamesList.Count == 0)
+            if (GamesList.Count == 0)
             {
-                return null;
+                throw new NotFoundException("Not found games");
             }
 
-            return _gamesList;
+            return GamesList;
+        }
+
+        public void PostGamesToDatabase()
+        {
+            if (GamesList.Count == 0)
+            {
+                throw new NotFoundException("Not found games");
+            }
+
+            foreach (var gameDto in GamesList)
+            {
+                var gameToDb = new Game
+                {
+                    Title = gameDto.GameTitle,
+                    ImageUrl = gameDto.ImageUrl,
+                    ReleaseDate = DateTime.Parse(gameDto.ReleaseDate)
+
+                };
+            }
         }
 
 
         public async Task<List<GameDto>> GetNintendoGames()
         {
-            for (int i = 0; i <= 2; i++)
+            for (int i = 0; i <= 1; i++)
             {
-                var doc = await GetHtmlDocument(URL + $"&page={i}");
+                var doc = await GetHtmlDocument(_URL + $"&page={i}");
 
                 var listOfGamesOnPage = doc.DocumentNode
                 .QuerySelectorAll("table.clamp-list tr.expand_collapse").ToList();
@@ -45,7 +67,7 @@ namespace NintendoGames.Services.DataScraper
                 for (int j = 0; j < listOfGamesOnPage.Count; j++)
                 {
                     var game = await GetGameDetails(
-                        listOfGamesOnPage[j].SelectNodes("//span[@class = 'title numbered']")[j].InnerText,
+                        listOfGamesOnPage[j].SelectNodes("//span[@class = 'title numbered']")[j].InnerText.Replace("\n","").Replace(".","").Trim(),
 
                         listOfGamesOnPage[j].QuerySelector("a.title h3").InnerText,
 
@@ -60,11 +82,11 @@ namespace NintendoGames.Services.DataScraper
                                                         j].Attributes["href"].Value
                     );
 
-                    _gamesList.Add(game);
+                    GamesList.Add(game);
                 }
             }
 
-            return _gamesList;
+            return GamesList;
         }
 
         private async Task<GameDto> GetGameDetails(string id, string gameTitle, string imgUrl, string releaseDate, string moreDetailsUrl)
@@ -114,6 +136,11 @@ namespace NintendoGames.Services.DataScraper
             doc.LoadHtml(html);
 
             return doc;
+        }
+
+        private DateTime FormatReleaseDate()
+        {
+            return DateTime.Now;
         }
     }
 }

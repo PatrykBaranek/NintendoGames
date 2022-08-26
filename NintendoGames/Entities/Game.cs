@@ -1,16 +1,16 @@
 ﻿namespace NintendoGames.Entities
 {
-    public class Games
+    public class Game
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string ImageUrl { get; set; }
 
-        public Guid DeveloperId { get; set; }
-        public Developer Developer { get; set; }
 
         public Guid RatingId { get; set; }
-        public Ratings Ratings { get; set; }
+        public Rating Rating { get; set; }
+        public ICollection<Developers> Developers { get; set; }
+        public ICollection<Genres> Genres { get; set; }
     }
 }
