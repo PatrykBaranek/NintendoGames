@@ -29,35 +29,88 @@ namespace NintendoGames.Services.DataScraper
         {
             if (GamesList.Count == 0)
             {
-                throw new NotFoundException("Not found games");
+                throw new NoContentException("Not found games");
             }
 
             return GamesList;
         }
 
-        public void PostGamesToDatabase()
+        public async Task PostGamesToDatabase()
         {
             if (GamesList.Count == 0)
             {
-                throw new NotFoundException("Not found games");
+                throw new NoContentException("Not found games");
             }
 
             foreach (var gameDto in GamesList)
             {
                 var gameToDb = new Game
                 {
+                    Id = Guid.NewGuid(),
                     Title = gameDto.GameTitle,
                     ImageUrl = gameDto.ImageUrl,
-                    ReleaseDate = DateTime.Parse(gameDto.ReleaseDate)
-
+                    ReleaseDate = FormatReleaseDate(gameDto.ReleaseDate)
                 };
+
+                var ratingToGame = new Rating
+                {
+                    Id = Guid.NewGuid(),
+                    CriticRating = int.Parse(gameDto.MoreDetails.Ratings.CriticRating),
+                    UserScore = double.Parse(gameDto.MoreDetails.Ratings.UserScore),
+                    IsMustPlay = gameDto.MoreDetails.Ratings.IsMustPlay,
+                    GameId = gameToDb.Id
+                };
+
+                gameToDb.RatingId = ratingToGame.Id;
+
+                await _dbContext.Game.AddAsync(gameToDb);
+
+                foreach (var developers in gameDto.MoreDetails.Developers)
+                {
+                    foreach (var developer in developers)
+                    {
+                        var developerToGame = new Developers
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = developer,
+                            GameId = gameToDb.Id
+                        };
+
+                        await _dbContext.Developers.AddAsync(developerToGame);
+                    }
+                }
+
+                foreach (var genre in gameDto.MoreDetails.Genres)
+                {
+                    var genresToGame = new Genres
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = genre,
+                        GameId = gameToDb.Id
+                    };
+
+                    await _dbContext.Genres.AddAsync(genresToGame);
+                }
+
+                await _dbContext.SaveChangesAsync();
             }
         }
 
 
-        public async Task<List<GameDto>> GetNintendoGames()
+        public async Task<List<GameDto>> GetNintendoGames(int pages, int gamesToDisplay)
         {
-            for (int i = 0; i <= 1; i++)
+            var pagesOnSiteDocument = await GetHtmlDocument(_URL);
+
+            var lastPageOnSite = int.Parse(pagesOnSiteDocument.QuerySelector("li.page.last_page").InnerText.Replace("&hellip;", ""));
+
+            if (pages > lastPageOnSite && pages <= 0)
+                throw new BadRequestException("Invalid");
+
+            if (gamesToDisplay <= 0)
+                throw new BadRequestException("Invalid");
+
+
+            for (int i = 0; i <= pages; i++)
             {
                 var doc = await GetHtmlDocument(_URL + $"&page={i}");
 
@@ -67,15 +120,20 @@ namespace NintendoGames.Services.DataScraper
                 for (int j = 0; j < listOfGamesOnPage.Count; j++)
                 {
                     var game = await GetGameDetails(
-                        listOfGamesOnPage[j].SelectNodes("//span[@class = 'title numbered']")[j].InnerText.Replace("\n","").Replace(".","").Trim(),
+                        listOfGamesOnPage[j].SelectNodes("//span[@class = 'title numbered']")[j]
+                            .InnerText
+                            .Replace("\n", "")
+                            .Replace(".", "").Trim(),
 
-                        listOfGamesOnPage[j].QuerySelector("a.title h3").InnerText,
+                        listOfGamesOnPage[j].QuerySelector("a.title h3")
+                            .InnerText,
 
                         listOfGamesOnPage[j]
                             .SelectNodes("//td[@class = 'details']/div[@class = 'collapsed']/a/img")[j]
                             .Attributes["src"].Value,
 
-                        listOfGamesOnPage[j].SelectNodes("//td[@class = 'details']/span")[j].InnerText,
+                        listOfGamesOnPage[j].SelectNodes("//td[@class = 'details']/span")[j]
+                            .InnerText,
 
                         "https://www.metacritic.com" +
                                                    listOfGamesOnPage[j].SelectNodes("//div[@class = 'collapsed']/a")[
@@ -83,6 +141,11 @@ namespace NintendoGames.Services.DataScraper
                     );
 
                     GamesList.Add(game);
+
+                    if (GamesList.Count == gamesToDisplay)
+                    {
+                        return GamesList;
+                    }
                 }
             }
 
@@ -138,9 +201,16 @@ namespace NintendoGames.Services.DataScraper
             return doc;
         }
 
-        private DateTime FormatReleaseDate()
+        private DateTime FormatReleaseDate(string dateToFormat)
         {
-            return DateTime.Now;
+            var dateAsArrayString = dateToFormat.Split(' ');
+
+            var month = dateAsArrayString[0];
+            var day = dateAsArrayString[1].Replace(",", "");
+            var year = dateAsArrayString[2];
+
+            return DateTime.Parse(string.Join("/", month, day, year));
+
         }
     }
 }

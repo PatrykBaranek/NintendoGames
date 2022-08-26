@@ -17,9 +17,9 @@ namespace NintendoGames.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GameDto>>> GetNintendoGamesFromWeb()
+        public async Task<ActionResult<List<GameDto>>> GetNintendoGamesFromWeb([FromQuery] int pages, [FromQuery] int gamesToDisplay)
         {
-            var gamesFromWeb = await _dataScraperService.GetNintendoGames();
+            var gamesFromWeb = await _dataScraperService.GetNintendoGames(pages, gamesToDisplay);
 
             return Ok(gamesFromWeb);
         }
@@ -29,12 +29,15 @@ namespace NintendoGames.Controllers
         {
             var list = _dataScraperService.GetList();
 
-            if (list == null)
-            {
-                return NoContent();
-            }
-
             return Ok(list);
+        }
+
+        [HttpPost("addToDatabase")]
+        public ActionResult PostGameToDatabase()
+        {
+            _dataScraperService.PostGamesToDatabase();
+
+            return Ok();
         }
         
 

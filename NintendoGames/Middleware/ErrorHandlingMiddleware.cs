@@ -21,6 +21,11 @@ namespace NintendoGames.Middleware
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync(e.Message);
             }
+            catch (NoContentException e)
+            {
+                context.Response.StatusCode = 204;
+                await context.Response.WriteAsync(e.Message);
+            }
             catch (Exception e)
             {
                 context.Response.StatusCode = 500;
