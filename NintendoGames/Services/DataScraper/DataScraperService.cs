@@ -61,7 +61,7 @@ namespace NintendoGames.Services.DataScraper
             if (endPage > lastPageOnSite && startPage <= 0 || startPage > endPage && endPage < startPage)
                 throw new BadRequestException("Invalid params");
 
-            if (gamesToDisplay <= 0)
+            if (gamesToDisplay <= 0 || gamesToDisplay > endPage * 100)
                 throw new BadRequestException("Invalid params");
 
 

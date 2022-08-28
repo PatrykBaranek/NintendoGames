@@ -1,5 +1,7 @@
-﻿using NintendoGames.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using NintendoGames.Entities;
 using NintendoGames.Exceptions;
+using NintendoGames.Models.DataScraper;
 
 namespace NintendoGames.Services.DataScraper
 {
@@ -14,7 +16,7 @@ namespace NintendoGames.Services.DataScraper
         public async Task PostGamesToDatabase()
         {
             if (_gamesList.Count == 0)
-                throw new NoContentException("Not found games");
+                throw new NotFoundException("Not found games");
 
             GameFormat();
 
@@ -22,6 +24,7 @@ namespace NintendoGames.Services.DataScraper
             await _dbContext.Rating.AddRangeAsync(Ratings);
             await _dbContext.Developers.AddRangeAsync(Developers);
             await _dbContext.Genres.AddRangeAsync(Genres);
+
             await _dbContext.SaveChangesAsync();
         }
 
@@ -60,6 +63,11 @@ namespace NintendoGames.Services.DataScraper
         {
             foreach (var genre in genresDto)
             {
+                if (genre == string.Empty)
+                {
+                    continue;
+                }
+
                 var genresToGame = new Genres
                 {
                     Id = Guid.NewGuid(),
@@ -91,19 +99,18 @@ namespace NintendoGames.Services.DataScraper
 
         private static int FormatCriticReview(string criticRating)
         {
-            var criticRatingInt = int.Parse(criticRating);
-
-            return criticRatingInt;
+            return int.Parse(criticRating);
         }
 
         private static double FormatUserScore(string userScore)
         {
-            if (userScore == "")
+            if (userScore is "" or "tbd")
             {
                 return 0;
             }
+            var userScoreStringFormat = userScore.Replace(".", ",");
 
-            return double.Parse(userScore);
+            return double.Parse(userScoreStringFormat);
         }
 
         private static DateTime FormatReleaseDate(string dateToFormat)

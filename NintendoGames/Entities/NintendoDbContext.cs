@@ -20,7 +20,6 @@ namespace NintendoGames.Entities
             modelBuilder.Entity<Game>(builder =>
             {
                 builder.Property(g => g.Title)
-                    .HasMaxLength(50)
                     .IsRequired();
 
                 builder.Property(g => g.ReleaseDate)
