@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using NintendoGames.Entities;
+using NintendoGames.Models.DataScraper;
 
 namespace NintendoGames
 {
@@ -6,7 +8,7 @@ namespace NintendoGames
     {
         public NintendoMappingProfile()
         {
-            
+            CreateMap<Game, GameDto>();
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
+using Microsoft.EntityFrameworkCore;
 using NintendoGames.Entities;
 using NintendoGames.Exceptions;
 using NintendoGames.Models.DataScraper;
 
 namespace NintendoGames.Services.DataScraper
 {
-    public class DataScraperService : IDataScraperService
+    public partial class DataScraperService : IDataScraperService
     {
         private const string _URL =
             "https://www.metacritic.com/browse/games/release-date/available/switch/metascore?view=condensed";
@@ -16,7 +17,7 @@ namespace NintendoGames.Services.DataScraper
         private readonly HttpClient _client;
         private readonly IMapper _mapper;
 
-        private static readonly List<GameDto> GamesList = new();
+        private static List<GameDto> _gamesList = new();
 
         public DataScraperService(NintendoDbContext dbContext, IMapper mapper)
         {
@@ -25,92 +26,46 @@ namespace NintendoGames.Services.DataScraper
             _client = new HttpClient();
         }
 
-        public List<GameDto> GetList()
+        public async Task<List<GameDto>> GetList()
         {
-            if (GamesList.Count == 0)
+            if (_dbContext.Game.Any())
+            {
+                var gamesList = await _dbContext.Game
+                    .Include(g => g.Developers)
+                    .Include(g => g.Genres)
+                    .Include(g => g.Rating)
+                    .ToListAsync();
+
+                var mapperList = _mapper.Map<List<Game>, List<GameDto>>(gamesList);
+
+                _gamesList = mapperList;
+
+                return _gamesList;
+            }
+
+            if (_gamesList.Count == 0)
             {
                 throw new NoContentException("Not found games");
             }
 
-            return GamesList;
+            return _gamesList;
         }
 
-        public async Task PostGamesToDatabase()
-        {
-            if (GamesList.Count == 0)
-            {
-                throw new NoContentException("Not found games");
-            }
-
-            foreach (var gameDto in GamesList)
-            {
-                var gameToDb = new Game
-                {
-                    Id = Guid.NewGuid(),
-                    Title = gameDto.GameTitle,
-                    ImageUrl = gameDto.ImageUrl,
-                    ReleaseDate = FormatReleaseDate(gameDto.ReleaseDate)
-                };
-
-                var ratingToGame = new Rating
-                {
-                    Id = Guid.NewGuid(),
-                    CriticRating = int.Parse(gameDto.MoreDetails.Ratings.CriticRating),
-                    UserScore = double.Parse(gameDto.MoreDetails.Ratings.UserScore),
-                    IsMustPlay = gameDto.MoreDetails.Ratings.IsMustPlay,
-                    GameId = gameToDb.Id
-                };
-
-                gameToDb.RatingId = ratingToGame.Id;
-
-                await _dbContext.Game.AddAsync(gameToDb);
-
-                foreach (var developers in gameDto.MoreDetails.Developers)
-                {
-                    foreach (var developer in developers)
-                    {
-                        var developerToGame = new Developers
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = developer,
-                            GameId = gameToDb.Id
-                        };
-
-                        await _dbContext.Developers.AddAsync(developerToGame);
-                    }
-                }
-
-                foreach (var genre in gameDto.MoreDetails.Genres)
-                {
-                    var genresToGame = new Genres
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = genre,
-                        GameId = gameToDb.Id
-                    };
-
-                    await _dbContext.Genres.AddAsync(genresToGame);
-                }
-
-                await _dbContext.SaveChangesAsync();
-            }
-        }
-
-
-        public async Task<List<GameDto>> GetNintendoGames(int pages, int gamesToDisplay)
+        
+        public async Task<List<GameDto>> GetNintendoGames(int startPage, int endPage, int gamesToDisplay)
         {
             var pagesOnSiteDocument = await GetHtmlDocument(_URL);
 
             var lastPageOnSite = int.Parse(pagesOnSiteDocument.QuerySelector("li.page.last_page").InnerText.Replace("&hellip;", ""));
 
-            if (pages > lastPageOnSite && pages <= 0)
-                throw new BadRequestException("Invalid");
+            if (endPage > lastPageOnSite && startPage <= 0 || startPage > endPage && endPage < startPage)
+                throw new BadRequestException("Invalid params");
 
             if (gamesToDisplay <= 0)
-                throw new BadRequestException("Invalid");
+                throw new BadRequestException("Invalid params");
 
 
-            for (int i = 0; i <= pages; i++)
+            for (int i = startPage - 1; i <= endPage; i++)
             {
                 var doc = await GetHtmlDocument(_URL + $"&page={i}");
 
@@ -140,16 +95,16 @@ namespace NintendoGames.Services.DataScraper
                                                         j].Attributes["href"].Value
                     );
 
-                    GamesList.Add(game);
+                    _gamesList.Add(game);
 
-                    if (GamesList.Count == gamesToDisplay)
+                    if (_gamesList.Count == gamesToDisplay)
                     {
-                        return GamesList;
+                        return _gamesList;
                     }
                 }
             }
 
-            return GamesList;
+            return _gamesList;
         }
 
         private async Task<GameDto> GetGameDetails(string id, string gameTitle, string imgUrl, string releaseDate, string moreDetailsUrl)
@@ -199,18 +154,6 @@ namespace NintendoGames.Services.DataScraper
             doc.LoadHtml(html);
 
             return doc;
-        }
-
-        private DateTime FormatReleaseDate(string dateToFormat)
-        {
-            var dateAsArrayString = dateToFormat.Split(' ');
-
-            var month = dateAsArrayString[0];
-            var day = dateAsArrayString[1].Replace(",", "");
-            var year = dateAsArrayString[2];
-
-            return DateTime.Parse(string.Join("/", month, day, year));
-
         }
     }
 }
