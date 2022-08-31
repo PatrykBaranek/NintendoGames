@@ -40,9 +40,6 @@ namespace NintendoGames.Entities
 
             modelBuilder.Entity<Rating>(builder =>
             {
-                builder.Property(r => r.CriticRating)
-                    .IsRequired();
-
                 builder.HasOne(r => r.Game)
                     .WithOne(g => g.Rating)
                     .HasForeignKey<Game>(g => g.RatingId);

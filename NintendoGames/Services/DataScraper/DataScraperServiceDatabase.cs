@@ -12,11 +12,16 @@ namespace NintendoGames.Services.DataScraper
         private static readonly List<Game> Games = new();
         private static readonly List<Rating> Ratings = new();
 
+        private static readonly List<GameDto> GamesList = new();
+        private static List<GameDto> _gamesFromDb = new();
+
 
         public async Task PostGamesToDatabase()
         {
-            if (_gamesList.Count == 0)
+            if (GamesList.Count == 0)
                 throw new NotFoundException("Not found games");
+
+            await DeleteDuplicateFromList();
 
             GameFormat();
 
@@ -28,16 +33,63 @@ namespace NintendoGames.Services.DataScraper
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<List<GameDto>> GetList()
+        {
+            if (await GetGamesFromDatabase() is not null)
+            {
+                return _gamesFromDb;
+            }
+
+            if (GamesList.Count == 0)
+                throw new NoContentException("Not found games");
+
+            return GamesList;
+        }
+
+        private async Task<List<GameDto>> GetGamesFromDatabase()
+        {
+            if (!_dbContext.Game.Any()) return null;
+
+            var gamesList = await _dbContext.Game
+                .Include(g => g.Developers)
+                .Include(g => g.Genres)
+                .Include(g => g.Rating)
+                .ToListAsync();
+
+            var mappedGamesList = _mapper.Map<List<Game>, List<GameDto>>(gamesList);
+
+            _gamesFromDb = mappedGamesList;
+
+            return _gamesFromDb;
+        }
+
+        private async Task DeleteDuplicateFromList()
+        {
+            if (await GetGamesFromDatabase() == null)
+            {
+                return;
+            }
+
+            var gamesToRemove = GamesList.Where(gameDto => _gamesFromDb.Any(g => g.ImageUrl == gameDto.ImageUrl)).ToList();
+
+            GamesList.RemoveAll(g => gamesToRemove.Contains(g));
+        }
+
         private static void GameFormat()
         {
-            foreach (var gameDto in _gamesList)
+            Games.Clear();
+            Ratings.Clear();
+            Developers.Clear();
+            Genres.Clear();
+
+            foreach (var gameDto in GamesList)
             {
                 var gameToDb = new Game
                 {
                     Id = Guid.NewGuid(),
                     Title = gameDto.GameTitle,
                     ImageUrl = gameDto.ImageUrl,
-                    ReleaseDate = FormatReleaseDate(gameDto.ReleaseDate)
+                    ReleaseDate = FormatReleaseDate(gameDto.ReleaseDate),
                 };
 
                 var ratingToGame = new Rating
@@ -99,7 +151,7 @@ namespace NintendoGames.Services.DataScraper
 
         private static int FormatCriticReview(string criticRating)
         {
-            return int.Parse(criticRating);
+            return criticRating is "" ? 0 : int.Parse(criticRating);
         }
 
         private static double FormatUserScore(string userScore)
@@ -108,6 +160,7 @@ namespace NintendoGames.Services.DataScraper
             {
                 return 0;
             }
+
             var userScoreStringFormat = userScore.Replace(".", ",");
 
             return double.Parse(userScoreStringFormat);

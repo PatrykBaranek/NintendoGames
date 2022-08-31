@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
-using Microsoft.EntityFrameworkCore;
 using NintendoGames.Entities;
 using NintendoGames.Exceptions;
 using NintendoGames.Models.DataScraper;
@@ -17,8 +16,6 @@ namespace NintendoGames.Services.DataScraper
         private readonly HttpClient _client;
         private readonly IMapper _mapper;
 
-        private static List<GameDto> _gamesList = new();
-
         public DataScraperService(NintendoDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
@@ -26,34 +23,10 @@ namespace NintendoGames.Services.DataScraper
             _client = new HttpClient();
         }
 
-        public async Task<List<GameDto>> GetList()
-        {
-            if (_dbContext.Game.Any())
-            {
-                var gamesList = await _dbContext.Game
-                    .Include(g => g.Developers)
-                    .Include(g => g.Genres)
-                    .Include(g => g.Rating)
-                    .ToListAsync();
-
-                var mapperList = _mapper.Map<List<Game>, List<GameDto>>(gamesList);
-
-                _gamesList = mapperList;
-
-                return _gamesList;
-            }
-
-            if (_gamesList.Count == 0)
-            {
-                throw new NoContentException("Not found games");
-            }
-
-            return _gamesList;
-        }
-
-        
         public async Task<List<GameDto>> GetNintendoGames(int startPage, int endPage, int gamesToDisplay)
         {
+            if (GamesList.Any()) GamesList.Clear();
+
             var pagesOnSiteDocument = await GetHtmlDocument(_URL);
 
             var lastPageOnSite = int.Parse(pagesOnSiteDocument.QuerySelector("li.page.last_page").InnerText.Replace("&hellip;", ""));
@@ -65,7 +38,7 @@ namespace NintendoGames.Services.DataScraper
                 throw new BadRequestException("Invalid params");
 
 
-            for (int i = startPage - 1; i <= endPage; i++)
+            for (int i = startPage - 1; i <= endPage - 1; i++)
             {
                 var doc = await GetHtmlDocument(_URL + $"&page={i}");
 
@@ -95,16 +68,16 @@ namespace NintendoGames.Services.DataScraper
                                                         j].Attributes["href"].Value
                     );
 
-                    _gamesList.Add(game);
+                    GamesList.Add(game);
 
-                    if (_gamesList.Count == gamesToDisplay)
+                    if (GamesList.Count == gamesToDisplay)
                     {
-                        return _gamesList;
+                        return GamesList;
                     }
                 }
             }
 
-            return _gamesList;
+            return GamesList;
         }
 
         private async Task<GameDto> GetGameDetails(string id, string gameTitle, string imgUrl, string releaseDate, string moreDetailsUrl)
