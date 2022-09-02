@@ -4,8 +4,8 @@ namespace NintendoGames.Services.DataScraper
 {
     public interface IDataScraperService
     {
-        Task<List<GameDto>> GetList();
-        Task<List<GameDto>> GetNintendoGames(int startPage, int endPage, int gamesToDisplay);
+        Task<List<ScrapedGameDto>> GetList();
+        Task<List<ScrapedGameDto>> GetNintendoGames(int startPage, int endPage, int gamesToDisplay);
         Task PostGamesToDatabase();
     }
 }

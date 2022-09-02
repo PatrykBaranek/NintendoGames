@@ -1,6 +1,6 @@
 ﻿namespace NintendoGames.Models.DataScraper
 {
-    public class GameDto
+    public class ScrapedGameDto
     {
         public string Id { get; set; }
         public string GameTitle { get; set; }

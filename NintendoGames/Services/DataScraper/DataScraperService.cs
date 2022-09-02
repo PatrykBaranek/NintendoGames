@@ -23,7 +23,7 @@ namespace NintendoGames.Services.DataScraper
             _client = new HttpClient();
         }
 
-        public async Task<List<GameDto>> GetNintendoGames(int startPage, int endPage, int gamesToDisplay)
+        public async Task<List<ScrapedGameDto>> GetNintendoGames(int startPage, int endPage, int gamesToDisplay)
         {
             if (GamesList.Any()) GamesList.Clear();
 
@@ -80,11 +80,11 @@ namespace NintendoGames.Services.DataScraper
             return GamesList;
         }
 
-        private async Task<GameDto> GetGameDetails(string id, string gameTitle, string imgUrl, string releaseDate, string moreDetailsUrl)
+        private async Task<ScrapedGameDto> GetGameDetails(string id, string gameTitle, string imgUrl, string releaseDate, string moreDetailsUrl)
         {
             var moreDetails = await GetMoreDetails(moreDetailsUrl);
 
-            var gameDto = new GameDto
+            var gameDto = new ScrapedGameDto
             {
                 Id = id,
                 GameTitle = gameTitle,

@@ -12,8 +12,8 @@ namespace NintendoGames.Services.DataScraper
         private static readonly List<Game> Games = new();
         private static readonly List<Rating> Ratings = new();
 
-        private static readonly List<GameDto> GamesList = new();
-        private static List<GameDto> _gamesFromDb = new();
+        private static readonly List<ScrapedGameDto> GamesList = new();
+        private static List<ScrapedGameDto> _gamesFromDb = new();
 
 
         public async Task PostGamesToDatabase()
@@ -33,7 +33,7 @@ namespace NintendoGames.Services.DataScraper
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<GameDto>> GetList()
+        public async Task<List<ScrapedGameDto>> GetList()
         {
             if (await GetGamesFromDatabase() is not null)
             {
@@ -46,7 +46,7 @@ namespace NintendoGames.Services.DataScraper
             return GamesList;
         }
 
-        private async Task<List<GameDto>> GetGamesFromDatabase()
+        private async Task<List<ScrapedGameDto>> GetGamesFromDatabase()
         {
             if (!_dbContext.Game.Any()) return null;
 
@@ -56,7 +56,7 @@ namespace NintendoGames.Services.DataScraper
                 .Include(g => g.Rating)
                 .ToListAsync();
 
-            var mappedGamesList = _mapper.Map<List<Game>, List<GameDto>>(gamesList);
+            var mappedGamesList = _mapper.Map<List<Game>, List<ScrapedGameDto>>(gamesList);
 
             _gamesFromDb = mappedGamesList;
 

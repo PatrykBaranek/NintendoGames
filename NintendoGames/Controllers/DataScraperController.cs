@@ -17,7 +17,7 @@ namespace NintendoGames.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GameDto>>> GetNintendoGamesFromWeb([FromQuery] int startPage, [FromQuery] int endPage, [FromQuery] int gamesToDisplay)
+        public async Task<ActionResult<List<ScrapedGameDto>>> GetNintendoGamesFromWeb([FromQuery] int startPage, [FromQuery] int endPage, [FromQuery] int gamesToDisplay)
         {
             var gamesFromWeb = await _dataScraperService.GetNintendoGames(startPage, endPage, gamesToDisplay);
 
@@ -25,7 +25,7 @@ namespace NintendoGames.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<List<GameDto>>> GetList()
+        public async Task<ActionResult<List<ScrapedGameDto>>> GetList()
         {
             var list = await _dataScraperService.GetList();
 
