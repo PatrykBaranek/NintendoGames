@@ -44,13 +44,16 @@ namespace NintendoGames.Services.Games
             var gameToDelete = await _dbContext.Game
                 .Include(g => g.Developers)
                 .Include(g => g.Genres)
-                .Include(g => g.Rating)
                 .FirstAsync(g=> g.Id == gameId);
 
+            
             if (gameToDelete is null)
                 throw new NotFoundException("Not found game to delete");
 
+            var ratingToDelete = await _dbContext.Rating.FirstAsync(r => r.GameId == gameId);
+
             _dbContext.Remove(gameToDelete);
+            _dbContext.Remove(ratingToDelete);
             await _dbContext.SaveChangesAsync();
         }
 
