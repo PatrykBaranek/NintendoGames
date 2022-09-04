@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NintendoGames.Models.DataScraper;
+using NintendoGames.Models.DataScraperModels;
 using NintendoGames.Services.DataScraper;
 
 namespace NintendoGames.Controllers

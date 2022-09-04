@@ -1,4 +1,4 @@
-﻿using NintendoGames.Models.DataScraper;
+﻿using NintendoGames.Models.DataScraperModels;
 
 namespace NintendoGames.Services.DataScraper
 {

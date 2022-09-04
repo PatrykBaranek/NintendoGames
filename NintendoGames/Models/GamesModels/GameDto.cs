@@ -1,6 +1,6 @@
-﻿namespace NintendoGames.Models.Games
+﻿namespace NintendoGames.Models.GamesModels
 {
-    public class CreateGameDto
+    public class GameDto
     {
         public string Title { get; set; }
         public DateTime ReleaseDate { get; set; }

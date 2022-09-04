@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using NintendoGames.Entities;
-using NintendoGames.Models.DataScraper;
-using NintendoGames.Models.Games;
+using NintendoGames.Models.DataScraperModels;
+using NintendoGames.Models.GamesModels;
+using NintendoGames.Models.RatingModels;
 
 namespace NintendoGames
 {
@@ -18,6 +19,8 @@ namespace NintendoGames
                 .ForMember(g => g.IsMustPlay, c => c.MapFrom(g => g.Rating.IsMustPlay))
                 .ForMember(g => g.GenreName, c => c.MapFrom(g => g.Genres.Select(g => g.Name).ToList()))
                 .ForMember(g => g.DeveloperName, c => c.MapFrom(g => g.Developers.Select(d => d.Name).ToList()));
+
+            CreateMap<UpdateUserScoreDto, Rating>();
         }
     }
 }

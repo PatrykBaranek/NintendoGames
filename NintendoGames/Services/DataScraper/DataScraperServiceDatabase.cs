@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NintendoGames.Entities;
 using NintendoGames.Exceptions;
-using NintendoGames.Models.DataScraper;
+using NintendoGames.Models.DataScraperModels;
 
 namespace NintendoGames.Services.DataScraper
 {

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NintendoGames.Entities;
 using NintendoGames.Exceptions;
-using NintendoGames.Models.Games;
+using NintendoGames.Models.GamesModels;
 
 namespace NintendoGames.Services.Games
 {
