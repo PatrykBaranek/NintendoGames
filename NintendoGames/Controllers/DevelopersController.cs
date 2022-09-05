@@ -15,6 +15,14 @@ namespace NintendoGames.Controllers
             _developersService = developersService;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<DevelopersDto>>> GetAllGameDevelopers([FromRoute] Guid gameId)
+        {
+            var developers = await _developersService.GetAllGameDevelopers(gameId);
+
+            return Ok(developers);
+        }
+
         [HttpPost("add")]
         public async Task<ActionResult> AddDeveloper([FromRoute] Guid gameId, [FromBody] AddDeveloperDto developerDto)
         {

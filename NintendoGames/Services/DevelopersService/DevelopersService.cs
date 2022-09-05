@@ -18,12 +18,19 @@ namespace NintendoGames.Services.DevelopersService
             _mapper = mapper;
         }
 
+        public async Task<List<DevelopersDto>> GetAllGameDevelopers(Guid gameId)
+        {
+            var developers = await GetAllGameDevelopersFromDatabase(gameId);
+
+            return _mapper.Map<List<DevelopersDto>>(developers);
+        }
+
         public async Task DeleteDeveloper(Guid gameId, DeleteDeveloperDto deleteDeveloperDto)
         {
-            var developers = await GetAllGameDevelopers(gameId);
+            var developers = await GetAllGameDevelopersFromDatabase(gameId);
 
             if (deleteDeveloperDto.DeveloperId is null && deleteDeveloperDto.DeveloperName == string.Empty)
-                throw new BadRequestException("One of params have to fill");
+                throw new BadRequestException("One of params have to be filled");
 
             if (deleteDeveloperDto.DeveloperId is not null)
             {
@@ -52,7 +59,7 @@ namespace NintendoGames.Services.DevelopersService
 
         public async Task AddDeveloper(Guid gameId, AddDeveloperDto addDeveloperDto)
         {
-            var developers = await GetAllGameDevelopers(gameId);
+            var developers = await GetAllGameDevelopersFromDatabase(gameId);
 
             if (developers.Any(d => string.Equals(d.Name, addDeveloperDto.DeveloperName, StringComparison.CurrentCultureIgnoreCase)))
                 throw new BadRequestException("Developer already exist");
@@ -67,7 +74,7 @@ namespace NintendoGames.Services.DevelopersService
         }
 
 
-        private async Task<List<Developers>> GetAllGameDevelopers(Guid gameId)
+        private async Task<List<Developers>> GetAllGameDevelopersFromDatabase(Guid gameId)
         {
             var developers = await _dbContext.Developers.Where(d => d.GameId == gameId).ToListAsync();
 

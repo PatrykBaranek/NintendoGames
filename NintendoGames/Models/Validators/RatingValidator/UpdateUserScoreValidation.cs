@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using NintendoGames.Models.RatingModels;
 
-namespace NintendoGames.Models.Validation.RatingValidator
+namespace NintendoGames.Models.Validators.RatingValidator
 {
     public class UpdateUserScoreValidation : AbstractValidator<UpdateUserScoreDto>
     {

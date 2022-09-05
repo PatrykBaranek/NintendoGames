@@ -6,5 +6,6 @@ namespace NintendoGames.Services.DevelopersService
     {
         Task AddDeveloper(Guid gameId, AddDeveloperDto addDeveloperDto);
         Task DeleteDeveloper(Guid gameId, DeleteDeveloperDto deleteDeveloperDto);
+        Task<List<DevelopersDto>> GetAllGameDevelopers(Guid gameId);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using NintendoGames.Models.DevelopersModels;
 
-namespace NintendoGames.Models.Validation.DevelopersValidator
+namespace NintendoGames.Models.Validators.DevelopersValidator
 {
     public class AddDeveloperValidation : AbstractValidator<AddDeveloperDto>
     {
