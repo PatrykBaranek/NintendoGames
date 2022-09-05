@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using NintendoGames.Models.RatingModels;
 
-namespace NintendoGames.Models.Validation
+namespace NintendoGames.Models.Validation.RatingValidator
 {
-    public class RatingValidation : AbstractValidator<UpdateUserScoreDto>
+    public class UpdateUserScoreValidation : AbstractValidator<UpdateUserScoreDto>
     {
-        public RatingValidation()
+        public UpdateUserScoreValidation()
         {
             RuleFor(r => r.UserScore)
                 .NotEmpty()

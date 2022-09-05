@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using NintendoGames.Entities;
 using NintendoGames.Models.DataScraperModels;
+using NintendoGames.Models.DevelopersModels;
 using NintendoGames.Models.GamesModels;
 using NintendoGames.Models.RatingModels;
 
@@ -21,6 +22,9 @@ namespace NintendoGames
                 .ForMember(g => g.DeveloperName, c => c.MapFrom(g => g.Developers.Select(d => d.Name).ToList()));
 
             CreateMap<UpdateUserScoreDto, Rating>();
+
+            CreateMap<AddDeveloperDto, Developers>()
+                .ForMember(d => d.Name, c => c.MapFrom(d => d.DeveloperName));
         }
     }
 }

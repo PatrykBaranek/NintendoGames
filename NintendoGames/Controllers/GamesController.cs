@@ -23,14 +23,14 @@ namespace NintendoGames.Controllers
         }
 
         [HttpGet("game")]
-        public async Task<ActionResult<List<GameDto>>> GetGames([FromQuery] string gameName)
+        public async Task<ActionResult<List<GameDto>>> GetGamesByName([FromQuery] string gameName)
         {
-            var relatedGames = await _gamesService.GetGamesByQuery(gameName);
+            var relatedGames = await _gamesService.GetGamesByName(gameName);
 
             return Ok(relatedGames);
         }
 
-        [HttpDelete("delete/{gameId}")]
+        [HttpDelete("delete/{gameId:guid}")]
         public async Task<ActionResult> DeleteGame([FromRoute] Guid gameId)
         {
             await _gamesService.DeleteGame(gameId);

@@ -15,10 +15,10 @@ namespace NintendoGames.Controllers
             _ratingService = ratingService;
         }
 
-        [HttpPatch("update")]
-        public async Task<ActionResult> UpdateRating([FromRoute] Guid gameId, [FromBody] UpdateUserScoreDto updateUserScore)
+        [HttpPatch("updateUserScoreDto")]
+        public async Task<ActionResult> UpdateUserScore([FromRoute] Guid gameId, [FromBody] UpdateUserScoreDto updateUserScoreDto)
         {
-            await _ratingService.UpdateUserScore(gameId, updateUserScore);
+            await _ratingService.UpdateUserScore(gameId, updateUserScoreDto);
 
             return Ok();
         }

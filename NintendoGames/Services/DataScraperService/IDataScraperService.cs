@@ -1,6 +1,6 @@
 ﻿using NintendoGames.Models.DataScraperModels;
 
-namespace NintendoGames.Services.DataScraper
+namespace NintendoGames.Services.DataScraperService
 {
     public interface IDataScraperService
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NintendoGames.Models.DataScraperModels;
-using NintendoGames.Services.DataScraper;
+using NintendoGames.Services.DataScraperService;
 
 namespace NintendoGames.Controllers
 {

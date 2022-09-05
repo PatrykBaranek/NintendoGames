@@ -5,7 +5,7 @@ using NintendoGames.Entities;
 using NintendoGames.Exceptions;
 using NintendoGames.Models.DataScraperModels;
 
-namespace NintendoGames.Services.DataScraper
+namespace NintendoGames.Services.DataScraperService
 {
     public partial class DataScraperService : IDataScraperService
     {

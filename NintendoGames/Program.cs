@@ -4,9 +4,12 @@ using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using NintendoGames.Entities;
 using NintendoGames.Middleware;
+using NintendoGames.Models.DevelopersModels;
 using NintendoGames.Models.RatingModels;
-using NintendoGames.Models.Validation;
-using NintendoGames.Services.DataScraper;
+using NintendoGames.Models.Validation.DevelopersValidator;
+using NintendoGames.Models.Validation.RatingValidator;
+using NintendoGames.Services.DataScraperService;
+using NintendoGames.Services.DevelopersService;
 using NintendoGames.Services.Games;
 using NintendoGames.Services.RatingService;
 
@@ -29,11 +32,13 @@ builder.Services.AddDbContext<NintendoDbContext>(opt =>
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 // Validation
-builder.Services.AddScoped<IValidator<UpdateUserScoreDto>, RatingValidation>();
+builder.Services.AddScoped<IValidator<UpdateUserScoreDto>, UpdateUserScoreValidation>();
+builder.Services.AddScoped<IValidator<AddDeveloperDto>, AddDeveloperValidation>();
 
 builder.Services.AddScoped<IGamesService, GamesService>();
 builder.Services.AddScoped<IDataScraperService, DataScraperService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
+builder.Services.AddScoped<IDevelopersService, DevelopersService>();
 
 builder.Services.AddSwaggerGen();
 

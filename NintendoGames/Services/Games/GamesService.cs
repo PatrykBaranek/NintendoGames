@@ -17,14 +17,7 @@ namespace NintendoGames.Services.Games
             _mapper = mapper;
         }
 
-        public async Task<List<GameDto>> GetAllGames()
-        {
-            var gamesList = await GetGamesFromDatabase();
-
-            return gamesList;
-        }
-
-        public async Task<List<GameDto>> GetGamesByQuery(string gameName)
+        public async Task<List<GameDto>> GetGamesByName(string gameName)
         {
             var games = await GetGamesFromDatabase();
 
@@ -33,9 +26,17 @@ namespace NintendoGames.Services.Games
             var result = games.Where(g => g.Title.ToLower().Contains(queryString)).OrderBy(g => g.ReleaseDate).ToList();
 
             if (result.Count == 0)
-                throw new NotFoundException($"Not found games like {queryString}");
+                throw new NotFoundException($"Not found games named {queryString}");
+
 
             return result;
+        }
+
+        public async Task<List<GameDto>> GetAllGames()
+        {
+            var gamesList = await GetGamesFromDatabase();
+            
+            return gamesList;
         }
 
 
@@ -65,9 +66,9 @@ namespace NintendoGames.Services.Games
                 .Include(g => g.Genres)
                 .ToListAsync();
 
-            var gamesList = _mapper.Map<List<GameDto>>(gamesFromDb);
+            var games = _mapper.Map<List<GameDto>>(gamesFromDb);
 
-            return gamesList;
+            return games;
         }
     }
 }
