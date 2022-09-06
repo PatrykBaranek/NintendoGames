@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NintendoGames.Entities;
+﻿using NintendoGames.Entities;
 using NintendoGames.Exceptions;
 using NintendoGames.Models.DataScraperModels;
 
@@ -12,16 +11,13 @@ namespace NintendoGames.Services.DataScraperService
         private static readonly List<Game> Games = new();
         private static readonly List<Rating> Ratings = new();
 
-        private static readonly List<ScrapedGameDto> GamesList = new();
-        private static List<ScrapedGameDto> _gamesFromDb = new();
-
 
         public async Task PostGamesToDatabase()
         {
             if (GamesList.Count == 0)
                 throw new NotFoundException("Not found games");
 
-            await DeleteDuplicateFromList();
+            await DeleteDuplicateDataFromList();
 
             GameFormat();
 
@@ -33,37 +29,8 @@ namespace NintendoGames.Services.DataScraperService
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<ScrapedGameDto>> GetList()
-        {
-            if (await GetGamesFromDatabase() is not null)
-            {
-                return _gamesFromDb;
-            }
 
-            if (GamesList.Count == 0)
-                throw new NoContentException("Not found games");
-
-            return GamesList;
-        }
-
-        private async Task<List<ScrapedGameDto>> GetGamesFromDatabase()
-        {
-            if (!_dbContext.Game.Any()) return null;
-
-            var gamesList = await _dbContext.Game
-                .Include(g => g.Developers)
-                .Include(g => g.Genres)
-                .Include(g => g.Rating)
-                .ToListAsync();
-
-            var mappedGamesList = _mapper.Map<List<Game>, List<ScrapedGameDto>>(gamesList);
-
-            _gamesFromDb = mappedGamesList;
-
-            return _gamesFromDb;
-        }
-
-        private async Task DeleteDuplicateFromList()
+        private async Task DeleteDuplicateDataFromList()
         {
             if (await GetGamesFromDatabase() == null)
             {

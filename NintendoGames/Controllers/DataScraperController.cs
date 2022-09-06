@@ -24,10 +24,18 @@ namespace NintendoGames.Controllers
             return Ok(gamesFromWeb);
         }
 
-        [HttpGet("list")]
-        public async Task<ActionResult<List<ScrapedGameDto>>> GetList()
+        [HttpGet("allRelatedGamesFromDatabase")]
+        public async Task<ActionResult<List<ScrapedGameDto>>> GetGamesByNameFromDb([FromQuery] string gameName)
         {
-            var list = await _dataScraperService.GetList();
+            var listOfRelatedGames = await _dataScraperService.GetGamesByNameFromDb(gameName);
+
+            return Ok(listOfRelatedGames);
+        }
+
+        [HttpGet("allGamesFromDb")]
+        public async Task<ActionResult<List<ScrapedGameDto>>> GetListFromDb()
+        {
+            var list = await _dataScraperService.GetListFromDb();
 
             return Ok(list);
         }

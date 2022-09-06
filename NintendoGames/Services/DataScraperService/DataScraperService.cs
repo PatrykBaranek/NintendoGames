@@ -9,12 +9,12 @@ namespace NintendoGames.Services.DataScraperService
 {
     public partial class DataScraperService : IDataScraperService
     {
-        private const string _URL =
+        private const string Url =
             "https://www.metacritic.com/browse/games/release-date/available/switch/metascore?view=condensed";
 
-        private readonly NintendoDbContext _dbContext;
         private readonly HttpClient _client;
-        private readonly IMapper _mapper;
+        private readonly NintendoDbContext _dbContext;
+        private static readonly List<ScrapedGameDto> GamesList = new();
 
         public DataScraperService(NintendoDbContext dbContext, IMapper mapper)
         {
@@ -27,20 +27,20 @@ namespace NintendoGames.Services.DataScraperService
         {
             if (GamesList.Any()) GamesList.Clear();
 
-            var pagesOnSiteDocument = await GetHtmlDocument(_URL);
+            var pagesOnSiteDocument = await GetHtmlDocument(Url);
 
             var lastPageOnSite = int.Parse(pagesOnSiteDocument.QuerySelector("li.page.last_page").InnerText.Replace("&hellip;", ""));
 
-            if (endPage > lastPageOnSite && startPage <= 0 || startPage > endPage && endPage < startPage)
+            if (endPage > lastPageOnSite || startPage <= 0 || startPage > endPage && endPage < startPage)
                 throw new BadRequestException("Invalid params");
 
-            if (gamesToDisplay <= 0 || gamesToDisplay > endPage * 100)
+            if (gamesToDisplay <= 0 || gamesToDisplay > ((endPage + 1) - startPage) * 100)
                 throw new BadRequestException("Invalid params");
 
 
             for (int i = startPage - 1; i <= endPage - 1; i++)
             {
-                var doc = await GetHtmlDocument(_URL + $"&page={i}");
+                var doc = await GetHtmlDocument(Url + $"&page={i}");
 
                 var listOfGamesOnPage = doc.DocumentNode
                 .QuerySelectorAll("table.clamp-list tr.expand_collapse").ToList();
