@@ -13,10 +13,51 @@ namespace NintendoGames.Entities
         public DbSet<Rating> Rating { get; set; }
         public DbSet<Genres> Genres { get; set; }
         public DbSet<Developers> Developers { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<WishList> WishList { get; set; }
+        public DbSet<Role> Role { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Role>(builder =>
+            {
+                builder.HasData(new List<Role>
+                {
+                    new()
+                    {
+                        Id = 1,
+                        Name = "User"
+                    },
+                    new()
+                    {
+                        Id = 2,
+                        Name = "Admin"
+                    }
+                });
+
+            });
+
+            modelBuilder.Entity<User>(builder =>
+            {
+                builder.Property(u => u.Email)
+                    .IsRequired();
+
+                builder.Property(u => u.Password)
+                    .IsRequired();
+
+                builder.HasOne(u => u.WishList)
+                    .WithOne(w => w.User)
+                    .HasForeignKey<WishList>(w => w.UserId);
+            });
+
+            modelBuilder.Entity<WishList>(builder =>
+            {
+                builder.HasOne(w => w.User)
+                    .WithOne(u => u.WishList)
+                    .HasForeignKey<User>(w => w.WishListId);
+            });
+
             modelBuilder.Entity<Game>(builder =>
             {
                 builder.Property(g => g.Title)

@@ -10,7 +10,11 @@
 
         public Guid RatingId { get; set; }
         public Rating Rating { get; set; }
+
         public ICollection<Developers> Developers { get; set; }
+        
         public ICollection<Genres> Genres { get; set; }
+
+        public ICollection<WishList> WishLists { get; set; }
     }
 }
