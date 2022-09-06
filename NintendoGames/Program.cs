@@ -7,14 +7,17 @@ using NintendoGames.Middleware;
 using NintendoGames.Models.DevelopersModels;
 using NintendoGames.Models.GenresModels;
 using NintendoGames.Models.RatingModels;
+using NintendoGames.Models.UserModels;
 using NintendoGames.Models.Validators.DevelopersValidator;
 using NintendoGames.Models.Validators.GenreValidator;
 using NintendoGames.Models.Validators.RatingValidator;
+using NintendoGames.Models.Validators.UserValidator;
 using NintendoGames.Services.DataScraperService;
 using NintendoGames.Services.DevelopersService;
 using NintendoGames.Services.Games;
 using NintendoGames.Services.GenresService;
 using NintendoGames.Services.RatingService;
+using NintendoGames.Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +41,7 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IValidator<UpdateUserScoreDto>, UpdateUserScoreValidation>();
 builder.Services.AddScoped<IValidator<AddDeveloperDto>, AddDeveloperValidation>();
 builder.Services.AddScoped<IValidator<AddGenreDto>, AddGenreValidation>();
+builder.Services.AddScoped<IValidator<CreateUserDto>, CreateUserValidation>();
 
 
 builder.Services.AddScoped<IGamesService, GamesService>();
@@ -45,6 +49,7 @@ builder.Services.AddScoped<IDataScraperService, DataScraperService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<IDevelopersService, DevelopersService>();
 builder.Services.AddScoped<IGenresService, GenresService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddSwaggerGen();
 

@@ -8,7 +8,7 @@ namespace NintendoGames.Models.Validators.DevelopersValidator
         public DeleteDeveloperValidation()
         {
             RuleFor(x => x.DeveloperId)
-                .Custom((value,context) =>
+                .Custom((value, context) =>
                 {
                     if (value is null)
                     {

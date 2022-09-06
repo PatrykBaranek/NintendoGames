@@ -5,6 +5,7 @@ using NintendoGames.Models.DevelopersModels;
 using NintendoGames.Models.GamesModels;
 using NintendoGames.Models.GenresModels;
 using NintendoGames.Models.RatingModels;
+using NintendoGames.Models.UserModels;
 
 namespace NintendoGames
 {
@@ -46,6 +47,9 @@ namespace NintendoGames
             CreateMap<Genres, GenresDto>();
             CreateMap<AddGenreDto, Genres>()
                 .ForMember(ge => ge.Name, c => c.MapFrom(ge => ge.GenreName));
+
+            // User
+            CreateMap<CreateUserDto, User>();
         }
     }
 }
