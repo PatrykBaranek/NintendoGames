@@ -1,7 +1,11 @@
 using System.Reflection;
+using System.Text;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using NintendoGames;
 using NintendoGames.Entities;
 using NintendoGames.Middleware;
 using NintendoGames.Models.DevelopersModels;
@@ -12,12 +16,12 @@ using NintendoGames.Models.Validators.DevelopersValidator;
 using NintendoGames.Models.Validators.GenreValidator;
 using NintendoGames.Models.Validators.RatingValidator;
 using NintendoGames.Models.Validators.UserValidator;
+using NintendoGames.Services.AccountService;
 using NintendoGames.Services.DataScraperService;
 using NintendoGames.Services.DevelopersService;
 using NintendoGames.Services.Games;
 using NintendoGames.Services.GenresService;
 using NintendoGames.Services.RatingService;
-using NintendoGames.Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +29,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
@@ -42,6 +47,7 @@ builder.Services.AddScoped<IValidator<UpdateUserScoreDto>, UpdateUserScoreValida
 builder.Services.AddScoped<IValidator<AddDeveloperDto>, AddDeveloperValidation>();
 builder.Services.AddScoped<IValidator<AddGenreDto>, AddGenreValidation>();
 builder.Services.AddScoped<IValidator<CreateUserDto>, CreateUserValidation>();
+builder.Services.AddScoped<IValidator<LoginDto>, LoginValidation>();
 
 
 builder.Services.AddScoped<IGamesService, GamesService>();
@@ -49,12 +55,33 @@ builder.Services.AddScoped<IDataScraperService, DataScraperService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<IDevelopersService, DevelopersService>();
 builder.Services.AddScoped<IGenresService, GenresService>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
-builder.Services.AddSwaggerGen();
+// Authentication
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+var authenticationSettings = new AuthenticationSettings();
+
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+builder.Services.AddSingleton(authenticationSettings);
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(cfg =>
+    {
+        cfg.RequireHttpsMetadata = false;
+        cfg.SaveToken = true;
+        cfg.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = authenticationSettings.JwtIssuer,
+            ValidAudience = authenticationSettings.JwtIssuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
+        };
+    });
+builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
+
+app.UseAuthentication();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -62,10 +89,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

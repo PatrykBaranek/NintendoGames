@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NintendoGames.Models.GamesModels;
 using NintendoGames.Services.Games;
 
 namespace NintendoGames.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class GamesController : ControllerBase
     {
@@ -22,6 +24,7 @@ namespace NintendoGames.Controllers
             return Ok(gamesList);
         }
 
+        [Authorize(Roles = "User")]
         [HttpGet("game")]
         public async Task<ActionResult<List<GameDto>>> GetGamesByName([FromQuery] string gameName)
         {
@@ -30,6 +33,7 @@ namespace NintendoGames.Controllers
             return Ok(relatedGames);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete/{gameId:guid}")]
         public async Task<ActionResult> DeleteGame([FromRoute] Guid gameId)
         {

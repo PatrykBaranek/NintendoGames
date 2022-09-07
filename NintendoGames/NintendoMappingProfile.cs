@@ -48,8 +48,6 @@ namespace NintendoGames
             CreateMap<AddGenreDto, Genres>()
                 .ForMember(ge => ge.Name, c => c.MapFrom(ge => ge.GenreName));
 
-            // User
-            CreateMap<CreateUserDto, User>();
         }
     }
 }

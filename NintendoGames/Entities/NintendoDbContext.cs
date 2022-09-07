@@ -43,9 +43,6 @@ namespace NintendoGames.Entities
                 builder.Property(u => u.Email)
                     .IsRequired();
 
-                builder.Property(u => u.Password)
-                    .IsRequired();
-
                 builder.HasOne(u => u.WishList)
                     .WithOne(w => w.User)
                     .HasForeignKey<WishList>(w => w.UserId);
