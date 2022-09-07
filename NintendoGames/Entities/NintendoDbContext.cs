@@ -15,6 +15,7 @@ namespace NintendoGames.Entities
         public DbSet<Developers> Developers { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<WishList> WishList { get; set; }
+        public DbSet<GameWishList> GameWishList { get; set; }
         public DbSet<Role> Role { get; set; }
 
 
@@ -74,6 +75,20 @@ namespace NintendoGames.Entities
                 builder.HasMany(g => g.Genres)
                     .WithOne(ge => ge.Game)
                     .HasForeignKey(ge => ge.GameId);
+            });
+
+            modelBuilder.Entity<GameWishList>(builder =>
+            {
+                builder.HasKey(gw => new { gw.GameId, gw.WishListId });
+
+                builder.HasOne(gw => gw.Game)
+                    .WithMany(b => b.GameWishLists)
+                    .HasForeignKey(gw => gw.GameId);
+
+                builder.HasOne(gw => gw.WishList)
+                    .WithMany(w => w.GameWishLists)
+                    .HasForeignKey(gw => gw.WishListId);
+
             });
 
             modelBuilder.Entity<Rating>(builder =>

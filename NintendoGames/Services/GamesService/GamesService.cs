@@ -4,7 +4,7 @@ using NintendoGames.Entities;
 using NintendoGames.Exceptions;
 using NintendoGames.Models.GamesModels;
 
-namespace NintendoGames.Services.Games
+namespace NintendoGames.Services.GamesService
 {
     public class GamesService : IGamesService
     {

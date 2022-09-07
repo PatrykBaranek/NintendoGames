@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NintendoGames.Models.GamesModels;
-using NintendoGames.Services.Games;
+using NintendoGames.Services.GamesService;
 
 namespace NintendoGames.Controllers
 {
@@ -16,6 +16,7 @@ namespace NintendoGames.Controllers
             _gamesService = gamesService;
         }
 
+        [Authorize(Roles = "User, Admin")]
         [HttpGet]
         public async Task<ActionResult<List<GameDto>>> GetAllGames()
         {
@@ -24,7 +25,7 @@ namespace NintendoGames.Controllers
             return Ok(gamesList);
         }
 
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User, Admin")]
         [HttpGet("game")]
         public async Task<ActionResult<List<GameDto>>> GetGamesByName([FromQuery] string gameName)
         {

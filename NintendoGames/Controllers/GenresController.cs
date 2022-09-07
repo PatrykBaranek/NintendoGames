@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NintendoGames.Models.GenresModels;
 using NintendoGames.Services.GenresService;
 
 namespace NintendoGames.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "Admin")]
     [Route("api/games/{gameId:guid}/[controller]")]
     public class GenresController : ControllerBase
     {

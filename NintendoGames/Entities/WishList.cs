@@ -8,6 +8,6 @@
         public Guid UserId { get; set; }
         public User User { get; set; }
 
-        public ICollection<Game> Games { get; set; }
+        public ICollection<GameWishList> GameWishLists { get; set; }
     }
 }

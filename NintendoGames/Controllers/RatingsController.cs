@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NintendoGames.Models.RatingModels;
 using NintendoGames.Services.RatingService;
 
 namespace NintendoGames.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "Admin")]
     [Route("api/games/{gameId:guid}/[controller]")]
     public class RatingsController : ControllerBase
     {

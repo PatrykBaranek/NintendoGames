@@ -15,6 +15,6 @@
         
         public ICollection<Genres> Genres { get; set; }
 
-        public ICollection<WishList> WishLists { get; set; }
+        public ICollection<GameWishList> GameWishLists { get; set; }
     }
 }

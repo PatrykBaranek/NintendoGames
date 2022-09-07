@@ -19,7 +19,7 @@ using NintendoGames.Models.Validators.UserValidator;
 using NintendoGames.Services.AccountService;
 using NintendoGames.Services.DataScraperService;
 using NintendoGames.Services.DevelopersService;
-using NintendoGames.Services.Games;
+using NintendoGames.Services.GamesService;
 using NintendoGames.Services.GenresService;
 using NintendoGames.Services.RatingService;
 

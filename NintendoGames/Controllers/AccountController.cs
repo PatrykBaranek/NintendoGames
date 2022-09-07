@@ -5,7 +5,7 @@ using NintendoGames.Services.AccountService;
 namespace NintendoGames.Controllers
 {
     [ApiController]
-    [Route("api/user")]
+    [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;

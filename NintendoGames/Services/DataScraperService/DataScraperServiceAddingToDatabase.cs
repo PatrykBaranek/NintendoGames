@@ -1,6 +1,5 @@
 ﻿using NintendoGames.Entities;
 using NintendoGames.Exceptions;
-using NintendoGames.Models.DataScraperModels;
 
 namespace NintendoGames.Services.DataScraperService
 {
@@ -18,6 +17,9 @@ namespace NintendoGames.Services.DataScraperService
                 throw new NotFoundException("Not found games");
 
             await DeleteDuplicateDataFromList();
+
+            if (GamesList.Count == 0)
+                throw new NotFoundException("Not found games to add");
 
             GameFormat();
 
