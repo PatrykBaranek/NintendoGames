@@ -50,7 +50,7 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IValidator<UpdateUserScoreDto>, UpdateUserScoreValidation>();
 builder.Services.AddScoped<IValidator<AddDeveloperDto>, AddDeveloperValidation>();
 builder.Services.AddScoped<IValidator<AddGenreDto>, AddGenreValidation>();
-builder.Services.AddScoped<IValidator<CreateUserDto>, CreateUserValidation>();
+builder.Services.AddScoped<IValidator<CreateAccountDto>, CreateAccountValidation>();
 builder.Services.AddScoped<IValidator<LoginDto>, LoginValidation>();
 builder.Services.AddScoped<IValidator<AddGameToWishListDto>, AddGameToWishListValidation>();
 
@@ -60,8 +60,8 @@ builder.Services.AddScoped<IDataScraperService, DataScraperService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<IDevelopersService, DevelopersService>();
 builder.Services.AddScoped<IGenresService, GenresService>();
-builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IWishListService, WishListService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddHttpContextAccessor();

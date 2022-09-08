@@ -7,5 +7,7 @@
 
         public Guid WishListId { get; set; }
         public WishList WishList { get; set; }
+
+        public DateTime AddedOn { get; set; }
     }
 }

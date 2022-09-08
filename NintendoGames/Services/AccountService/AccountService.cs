@@ -26,17 +26,17 @@ namespace NintendoGames.Services.AccountService
             _authenticationSettings = authenticationSettings;
         }
 
-        public async Task Register(CreateUserDto createUserDto)
+        public async Task Register(CreateAccountDto createAccountDto)
         {
 
             var newUser = new User()
             {
                 Id = Guid.NewGuid(),
-                Email = createUserDto.Email,
-                RoleId = createUserDto.RoleId
+                Email = createAccountDto.Email,
+                RoleId = createAccountDto.RoleId
             };
 
-            var hashedPassword = _passwordHasher.HashPassword(newUser, createUserDto.Password);
+            var hashedPassword = _passwordHasher.HashPassword(newUser, createAccountDto.Password);
 
             newUser.PasswordHash = hashedPassword;
 

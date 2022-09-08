@@ -4,7 +4,7 @@ namespace NintendoGames.Services.AccountService
 {
     public interface IAccountService
     {
-        Task Register(CreateUserDto createUserDto);
+        Task Register(CreateAccountDto createAccountDto);
         Task<string> GenerateJwt(LoginDto loginDto);
     }
 }

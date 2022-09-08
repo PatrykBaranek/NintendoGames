@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NintendoGames.Models.GamesModels;
 using NintendoGames.Models.WishListModels;
 using NintendoGames.Services.WishListService;
 
@@ -19,7 +18,7 @@ namespace NintendoGames.Controllers
         }
 
         [HttpGet("showAllGames")]
-        public async Task<ActionResult<List<GameDto>>> ShowAllGamesUserWishList()
+        public async Task<ActionResult<List<WishListDto>>> ShowAllGamesUserWishList()
         {
             var list = await _wishListService.ShowAllGamesUserWishList();
 

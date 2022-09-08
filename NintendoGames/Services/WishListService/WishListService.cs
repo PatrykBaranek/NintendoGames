@@ -20,31 +20,34 @@ namespace NintendoGames.Services.WishListService
             _mapper = mapper;
         }
 
-        public async Task<List<GameDto>> ShowAllGamesUserWishList()
+        public async Task<List<WishListDto>> ShowAllGamesUserWishList()
         {
-
             var wishList = await GetUserWishList();
 
             var gamesWishList = await _dbContext.GameWishList.Where(gw => gw.WishListId == wishList.Id).ToListAsync();
 
             var gamesIds = gamesWishList.Select(g => g.GameId).ToList();
 
-            var gamesList = new List<Game>();
+            var wishListDto = new List<WishListDto>();
 
             foreach (var gameId in gamesIds)
             {
-                gamesList.Add(
-                    await _dbContext.Game
+                var game = await _dbContext.Game
                     .Include(g => g.Rating)
                     .Include(g => g.Developers)
                     .Include(g => g.Genres)
-                    .FirstOrDefaultAsync(g => g.Id == gameId)
-                    );
+                    .FirstAsync(g => g.Id == gameId);
+
+                var gameAddedOn = gamesWishList.First(gao => gao.GameId == game.Id).AddedOn;
+
+                var wishDto = _mapper.Map<WishListDto>(game);
+
+                wishDto.AddedOn = gameAddedOn;
+                
+                wishListDto.Add(wishDto);
             }
 
-            var wishListDto = _mapper.Map<List<GameDto>>(gamesList);
-
-            return wishListDto;
+            return wishListDto.OrderBy(w => w.AddedOn).ToList();
         }
 
         public async Task AddGameToWishList(AddGameToWishListDto addGameToWishListDto)
@@ -56,7 +59,8 @@ namespace NintendoGames.Services.WishListService
             var addGameToWishList = new GameWishList
             {
                 WishListId = wishList.Id,
-                GameId = gameToAdd.Id
+                GameId = gameToAdd.Id,
+                AddedOn = DateTime.Now
             };
 
             await _dbContext.GameWishList.AddAsync(addGameToWishList);
@@ -65,10 +69,19 @@ namespace NintendoGames.Services.WishListService
 
         public async Task DeleteGameFromWishList(DeleteGameFromWishListDto deleteGameFromWishListDto)
         {
-            var gameToDelete = await _dbContext.Game.FirstOrDefaultAsync(g => g.Title.ToLower().Contains(deleteGameFromWishListDto.GameName.ToLower().Trim()));
+            var gameToDelete = await FindGameInDatabase(deleteGameFromWishListDto.GameName);
 
-            if (gameToDelete is null)
-                throw new NotFoundException("Not found game");
+            var wishList = await GetUserWishList();
+
+            var gamesWishList = await _dbContext.GameWishList.Where(gw => gw.WishListId == wishList.Id).ToListAsync();
+
+            var gameInWishList = gamesWishList.FirstOrDefault(gw => gw.GameId == gameToDelete.Id);
+
+            if (gameInWishList is null)
+                throw new BadRequestException("Game doesn't exist in your wishlist");
+
+            _dbContext.GameWishList.Remove(gameInWishList);
+            await _dbContext.SaveChangesAsync();
 
         }
 

@@ -6,8 +6,8 @@ using NintendoGames.Services.GenresService;
 namespace NintendoGames.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Admin")]
     [Route("api/games/{gameId:guid}/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class GenresController : ControllerBase
     {
         private readonly IGenresService _genresService;

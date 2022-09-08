@@ -16,9 +16,9 @@ namespace NintendoGames.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> Register(CreateUserDto createUserDto)
+        public async Task<ActionResult> Register(CreateAccountDto createAccountDto)
         {
-            await _accountService.Register(createUserDto);
+            await _accountService.Register(createAccountDto);
 
             return Ok();
         }

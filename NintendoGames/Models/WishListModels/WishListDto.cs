@@ -2,7 +2,7 @@
 {
     public class WishListDto
     {
-        public int Id { get; set; }
+        public DateTime AddedOn { get; set; }
         public string Title { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string ImageUrl { get; set; }

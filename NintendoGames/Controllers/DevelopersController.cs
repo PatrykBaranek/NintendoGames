@@ -6,8 +6,8 @@ using NintendoGames.Services.DevelopersService;
 namespace NintendoGames.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Admin")]
     [Route("api/games/{gameId:guid}/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class DevelopersController : ControllerBase
     {
         private readonly IDevelopersService _developersService;

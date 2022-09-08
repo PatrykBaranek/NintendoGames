@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NintendoGames.Models.DataScraperModels;
 using NintendoGames.Services.DataScraperService;
 
@@ -6,6 +7,7 @@ namespace NintendoGames.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class DataScraperController : ControllerBase
     {
 

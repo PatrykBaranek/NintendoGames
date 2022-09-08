@@ -4,9 +4,9 @@ using NintendoGames.Models.AccountModels;
 
 namespace NintendoGames.Models.Validators.AccountValidator
 {
-    public class CreateUserValidation : AbstractValidator<CreateUserDto>
+    public class CreateAccountValidation : AbstractValidator<CreateAccountDto>
     {
-        public CreateUserValidation(NintendoDbContext dbContext)
+        public CreateAccountValidation(NintendoDbContext dbContext)
         {
             RuleFor(x => x.Email)
                 .EmailAddress()
