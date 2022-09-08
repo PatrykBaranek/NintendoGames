@@ -34,6 +34,15 @@ namespace NintendoGames.Controllers
             return Ok();
         }
 
+        [HttpDelete("delete")]
+        public async Task<ActionResult> DeleteGameFromWishList(
+            [FromBody] DeleteGameFromWishListDto deleteGameFromWishListDto)
+        {
+            await _wishListService.DeleteGameFromWishList(deleteGameFromWishListDto);
+
+            return Ok();
+        }
+
 
     }
 }

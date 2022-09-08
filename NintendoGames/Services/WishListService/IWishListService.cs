@@ -7,5 +7,6 @@ namespace NintendoGames.Services.WishListService
     {
         Task<List<GameDto>> ShowAllGamesUserWishList();
         Task AddGameToWishList(AddGameToWishListDto addGameToWishListDto);
+        Task DeleteGameFromWishList(DeleteGameFromWishListDto deleteGameFromWishListDto);
     }
 }

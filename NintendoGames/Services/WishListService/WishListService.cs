@@ -22,12 +22,8 @@ namespace NintendoGames.Services.WishListService
 
         public async Task<List<GameDto>> ShowAllGamesUserWishList()
         {
-            var userId = _userContextService.GetUserId;
 
-            if (userId is null)
-                throw new UnauthorizedException("Unauthorized");
-
-            var wishList = await _dbContext.WishList.FirstOrDefaultAsync(w => w.UserId == userId);
+            var wishList = await GetUserWishList();
 
             var gamesWishList = await _dbContext.GameWishList.Where(gw => gw.WishListId == wishList.Id).ToListAsync();
 
@@ -53,22 +49,9 @@ namespace NintendoGames.Services.WishListService
 
         public async Task AddGameToWishList(AddGameToWishListDto addGameToWishListDto)
         {
-            var gameToAdd = await _dbContext.Game.FirstOrDefaultAsync(g => g.Title.ToLower().Contains(addGameToWishListDto.GameName.ToLower().Trim()));
+            var gameToAdd = await FindGameInDatabase(addGameToWishListDto.GameName);
 
-            if (gameToAdd is null)
-                throw new NotFoundException("Not found game");
-
-            var userId = _userContextService.GetUserId;
-
-            var wishList = await _dbContext.WishList.FirstOrDefaultAsync(w => w.UserId == userId);
-
-            if (wishList is null)
-                throw new UnauthorizedException("Unauthorized");
-
-            var gamesInWishList = await _dbContext.GameWishList.Where(gw => gw.WishListId == wishList.Id).ToListAsync();
-
-            if (gamesInWishList.Any(g => g.GameId == gameToAdd.Id))
-                throw new BadRequestException("Game already exist in your WishList");
+            var wishList = await GetUserWishList();
 
             var addGameToWishList = new GameWishList
             {
@@ -78,6 +61,37 @@ namespace NintendoGames.Services.WishListService
 
             await _dbContext.GameWishList.AddAsync(addGameToWishList);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteGameFromWishList(DeleteGameFromWishListDto deleteGameFromWishListDto)
+        {
+            var gameToDelete = await _dbContext.Game.FirstOrDefaultAsync(g => g.Title.ToLower().Contains(deleteGameFromWishListDto.GameName.ToLower().Trim()));
+
+            if (gameToDelete is null)
+                throw new NotFoundException("Not found game");
+
+        }
+
+        private async Task<Game> FindGameInDatabase(string gameName)
+        {
+            var game = await _dbContext.Game.FirstOrDefaultAsync(g => g.Title.ToLower().Contains(gameName.ToLower().Trim()));
+
+            if (game is null)
+                throw new NotFoundException("Not found game");
+
+            return game;
+        }
+
+        private async Task<WishList> GetUserWishList()
+        {
+            var userId = _userContextService.GetUserId;
+
+            if (userId is null)
+                throw new UnauthorizedException("Unauthorized");
+
+            var wishList = await _dbContext.WishList.FirstOrDefaultAsync(w => w.UserId == userId);
+
+            return wishList;
         }
     }
 }
