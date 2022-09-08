@@ -1,4 +1,4 @@
-﻿namespace NintendoGames.Models.UserModels
+﻿namespace NintendoGames.Models.AccountModels
 {
     public class LoginDto
     {

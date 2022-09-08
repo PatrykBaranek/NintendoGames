@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using NintendoGames.Entities;
-using NintendoGames.Models.UserModels;
+using NintendoGames.Models.AccountModels;
 
-namespace NintendoGames.Models.Validators.UserValidator
+namespace NintendoGames.Models.Validators.AccountValidator
 {
     public class CreateUserValidation : AbstractValidator<CreateUserDto>
     {

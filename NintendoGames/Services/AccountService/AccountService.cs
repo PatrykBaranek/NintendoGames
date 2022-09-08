@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NintendoGames.Entities;
 using NintendoGames.Exceptions;
-using NintendoGames.Models.UserModels;
+using NintendoGames.Models.AccountModels;
 
 namespace NintendoGames.Services.AccountService
 {

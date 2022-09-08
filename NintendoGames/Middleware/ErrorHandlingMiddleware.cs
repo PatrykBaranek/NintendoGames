@@ -26,6 +26,16 @@ namespace NintendoGames.Middleware
                 context.Response.StatusCode = 204;
                 await context.Response.WriteAsync(e.Message);
             }
+            catch (ForbiddenException e)
+            {
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsJsonAsync(e.Message);
+            }
+            catch (UnauthorizedException e)
+            {
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsJsonAsync(e.Message);
+            }
             catch (Exception e)
             {
                 context.Response.StatusCode = 500;

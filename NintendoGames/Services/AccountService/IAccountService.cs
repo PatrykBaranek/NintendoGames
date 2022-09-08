@@ -1,4 +1,4 @@
-﻿using NintendoGames.Models.UserModels;
+﻿using NintendoGames.Models.AccountModels;
 
 namespace NintendoGames.Services.AccountService
 {

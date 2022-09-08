@@ -8,20 +8,24 @@ using Microsoft.IdentityModel.Tokens;
 using NintendoGames;
 using NintendoGames.Entities;
 using NintendoGames.Middleware;
+using NintendoGames.Models.AccountModels;
 using NintendoGames.Models.DevelopersModels;
 using NintendoGames.Models.GenresModels;
 using NintendoGames.Models.RatingModels;
-using NintendoGames.Models.UserModels;
+using NintendoGames.Models.Validators.AccountValidator;
 using NintendoGames.Models.Validators.DevelopersValidator;
 using NintendoGames.Models.Validators.GenreValidator;
 using NintendoGames.Models.Validators.RatingValidator;
-using NintendoGames.Models.Validators.UserValidator;
+using NintendoGames.Models.Validators.WishListValidator;
+using NintendoGames.Models.WishListModels;
+using NintendoGames.Services;
 using NintendoGames.Services.AccountService;
 using NintendoGames.Services.DataScraperService;
 using NintendoGames.Services.DevelopersService;
 using NintendoGames.Services.GamesService;
 using NintendoGames.Services.GenresService;
 using NintendoGames.Services.RatingService;
+using NintendoGames.Services.WishListService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +52,7 @@ builder.Services.AddScoped<IValidator<AddDeveloperDto>, AddDeveloperValidation>(
 builder.Services.AddScoped<IValidator<AddGenreDto>, AddGenreValidation>();
 builder.Services.AddScoped<IValidator<CreateUserDto>, CreateUserValidation>();
 builder.Services.AddScoped<IValidator<LoginDto>, LoginValidation>();
+builder.Services.AddScoped<IValidator<AddGameToWishListDto>, AddGameToWishListValidation>();
 
 
 builder.Services.AddScoped<IGamesService, GamesService>();
@@ -56,6 +61,10 @@ builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<IDevelopersService, DevelopersService>();
 builder.Services.AddScoped<IGenresService, GenresService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IWishListService, WishListService>();
+
+builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddHttpContextAccessor();
 
 // Authentication
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();

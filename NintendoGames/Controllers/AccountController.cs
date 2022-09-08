@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NintendoGames.Models.UserModels;
+using NintendoGames.Models.AccountModels;
 using NintendoGames.Services.AccountService;
 
 namespace NintendoGames.Controllers
