@@ -17,6 +17,7 @@ namespace NintendoGames.Entities
         public DbSet<WishList> WishList { get; set; }
         public DbSet<GameWishList> GameWishList { get; set; }
         public DbSet<Role> Role { get; set; }
+        public DbSet<UserRequest> UserRequest { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

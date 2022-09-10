@@ -25,6 +25,7 @@ using NintendoGames.Services.DevelopersService;
 using NintendoGames.Services.GamesService;
 using NintendoGames.Services.GenresService;
 using NintendoGames.Services.RatingService;
+using NintendoGames.Services.UserRequestService;
 using NintendoGames.Services.WishListService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,7 @@ builder.Services.AddDbContext<NintendoDbContext>(opt =>
 
 // Middleware
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddScoped<UserRequestMiddleware>();
 
 // Validation
 builder.Services.AddScoped<IValidator<UpdateUserScoreDto>, UpdateUserScoreValidation>();
@@ -62,6 +64,7 @@ builder.Services.AddScoped<IDevelopersService, DevelopersService>();
 builder.Services.AddScoped<IGenresService, GenresService>();
 builder.Services.AddScoped<IWishListService, WishListService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IUserRequestService, UserRequestService>();
 
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddHttpContextAccessor();
@@ -102,6 +105,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseAuthorization();
+app.UseMiddleware<UserRequestMiddleware>();
 app.MapControllers();
 
 app.Run();

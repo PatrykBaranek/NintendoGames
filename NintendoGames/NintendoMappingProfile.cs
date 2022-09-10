@@ -5,6 +5,7 @@ using NintendoGames.Models.DevelopersModels;
 using NintendoGames.Models.GamesModels;
 using NintendoGames.Models.GenresModels;
 using NintendoGames.Models.RatingModels;
+using NintendoGames.Models.UserRequestModels;
 using NintendoGames.Models.WishListModels;
 
 namespace NintendoGames
@@ -56,6 +57,9 @@ namespace NintendoGames
                 .ForMember(g => g.IsMustPlay, c => c.MapFrom(g => g.Rating.IsMustPlay))
                 .ForMember(g => g.GenreName, c => c.MapFrom(g => g.Genres.Select(g => g.Name).ToList()))
                 .ForMember(g => g.DeveloperName, c => c.MapFrom(g => g.Developers.Select(d => d.Name).ToList()));
+
+            // UserRequest 
+            CreateMap<UserRequest, UserRequestDto>();
         }
     }
 }

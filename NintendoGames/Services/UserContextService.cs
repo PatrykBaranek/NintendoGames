@@ -22,3 +22,4 @@ namespace NintendoGames.Services
         public Guid? GetUserId => (Guid?)Guid.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
     }
 }
+
