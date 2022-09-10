@@ -7,7 +7,6 @@ namespace NintendoGames.Middleware
     {
         private readonly NintendoDbContext _dbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private string _registerUrl;
         public UserRequestMiddleware(NintendoDbContext dbContext, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
@@ -16,16 +15,16 @@ namespace NintendoGames.Middleware
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            _registerUrl = context.Request.Path;
-
             await next.Invoke(context);
 
-            if (_registerUrl is not (@"/api/account/register" or @"/api/account/login"))
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user.Identity.IsAuthenticated)
             {
                 var newRequest = new UserRequest
                 {
-                    UserEmail = _httpContextAccessor.HttpContext?.User.FindFirst(c => c.Type == ClaimTypes.Name).Value,
-                    UserRole = _httpContextAccessor.HttpContext?.User.FindFirst(c => c.Type == ClaimTypes.Role).Value,
+                    UserEmail = _httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == ClaimTypes.Name).Value,
+                    UserRole = _httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == ClaimTypes.Role).Value,
                     Request = context.Request.Method,
                     RequestUrl = context.Request.Path,
                     StatusCode = context.Request.HttpContext.Response.StatusCode,

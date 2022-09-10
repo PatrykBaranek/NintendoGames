@@ -35,6 +35,9 @@ namespace NintendoGames.Services.GamesService
         public async Task<List<GameDto>> GetAllGames()
         {
             var gamesList = await GetGamesFromDatabase();
+
+            if (gamesList.Count == 0)
+                throw new NotFoundException("Not found games");
             
             return gamesList;
         }

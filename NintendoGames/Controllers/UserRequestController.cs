@@ -6,7 +6,7 @@ using NintendoGames.Services.UserRequestService;
 namespace NintendoGames.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     public class UserRequestController : ControllerBase
     {
@@ -18,6 +18,7 @@ namespace NintendoGames.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<UserRequestDto>>> GetAllUserRequests()
         {
             var list = await _userRequest.GetAllUserRequests();

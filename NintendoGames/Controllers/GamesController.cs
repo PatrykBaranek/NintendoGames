@@ -16,7 +16,7 @@ namespace NintendoGames.Controllers
             _gamesService = gamesService;
         }
 
-        [Authorize(Roles = "User, Admin")]
+        [Authorize(Roles = "User,Admin")]
         [HttpGet]
         public async Task<ActionResult<List<GameDto>>> GetAllGames()
         {
@@ -25,7 +25,7 @@ namespace NintendoGames.Controllers
             return Ok(gamesList);
         }
 
-        [Authorize(Roles = "User, Admin")]
+        [Authorize(Roles = "User,Admin")]
         [HttpGet("game")]
         public async Task<ActionResult<List<GameDto>>> GetGamesByName([FromQuery] string gameName)
         {
