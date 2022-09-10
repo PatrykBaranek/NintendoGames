@@ -7,6 +7,7 @@
         public string UserRole { get; set; }
         public string Request { get; set; }
         public string RequestUrl { get; set; }
+        public int StatusCode { get; set; }
         public DateTime RequestDate { get; set; }
 
     }

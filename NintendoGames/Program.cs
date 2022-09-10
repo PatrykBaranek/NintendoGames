@@ -102,10 +102,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<UserRequestMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseAuthorization();
-app.UseMiddleware<UserRequestMiddleware>();
 app.MapControllers();
 
 app.Run();

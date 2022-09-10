@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NintendoGames.Entities;
 
@@ -11,9 +12,10 @@ using NintendoGames.Entities;
 namespace NintendoGames.Migrations
 {
     [DbContext(typeof(NintendoDbContext))]
-    partial class NintendoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220910201753_AddStatusCodeToUserRequest")]
+    partial class AddStatusCodeToUserRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
