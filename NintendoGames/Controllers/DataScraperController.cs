@@ -26,7 +26,7 @@ namespace NintendoGames.Controllers
             return Ok(gamesFromWeb);
         }
 
-        [HttpGet("allRelatedGamesFromDatabase")]
+        [HttpGet("showAllRelatedGamesFromDatabase")]
         public async Task<ActionResult<List<ScrapedGameDto>>> GetGamesByNameFromDb([FromQuery] string gameName)
         {
             var listOfRelatedGames = await _dataScraperService.GetGamesByNameFromDb(gameName);
@@ -34,7 +34,7 @@ namespace NintendoGames.Controllers
             return Ok(listOfRelatedGames);
         }
 
-        [HttpGet("allGamesFromDb")]
+        [HttpGet("showAllGamesFromDatabase")]
         public async Task<ActionResult<List<ScrapedGameDto>>> GetListFromDb()
         {
             var list = await _dataScraperService.GetListFromDb();
